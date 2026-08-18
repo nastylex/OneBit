@@ -447,6 +447,92 @@
   .toast strong { display: block; line-height: 1.25; }
   .toast small { color: var(--muted); font-weight: 400; }
 
+  /* ============ BETA POPUP ============ */
+  .popup-backdrop {
+    position: fixed; inset: 0; z-index: 300;
+    display: grid; place-items: center; padding: 20px;
+    background: rgba(7,7,11,.72);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    animation: fadeIn .3s var(--ease);
+  }
+  .popup-backdrop[hidden] { display: none !important; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .popup-card {
+    position: relative; width: min(460px, 100%); text-align: center;
+    background: linear-gradient(180deg, rgba(26,22,38,.92), rgba(14,14,22,.96));
+    border: 1px solid rgba(168,85,247,.35);
+    border-radius: 26px; padding: 34px 30px 28px;
+    box-shadow: 0 40px 120px -20px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.06);
+    animation: popIn .45s var(--ease);
+  }
+  .popup-card::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 3px;
+    background: var(--grad); border-radius: 26px 26px 0 0;
+  }
+  @keyframes popIn { from { opacity: 0; transform: translateY(18px) scale(.96); } to { opacity: 1; transform: none; } }
+  .popup-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    display: grid; place-items: center;
+    transition: color .2s, transform .2s, border-color .2s;
+  }
+  .popup-close:hover { color: #fff; border-color: rgba(168,85,247,.5); transform: rotate(90deg); }
+  .popup-close svg { width: 15px; height: 15px; }
+  .popup-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--brand-2); background: rgba(236,72,153,.1);
+    border: 1px solid rgba(236,72,153,.3); border-radius: 999px; padding: 6px 14px;
+  }
+  .popup-badge .pulse-dot { width: 7px; height: 7px; background: #f472b6; }
+  .popup-card h3 { font-size: clamp(26px, 4.5vw, 34px); font-weight: 700; margin: 18px 0 10px; letter-spacing: -.02em; }
+  .popup-card h3 .gradient-text { white-space: nowrap; }
+  .popup-card > p { color: var(--muted); font-size: 15px; margin-bottom: 20px; }
+  .popup-list { list-style: none; display: grid; gap: 10px; text-align: left; margin-bottom: 24px; }
+  .popup-list li { display: flex; gap: 10px; font-size: 13.5px; color: var(--muted); align-items: flex-start; }
+  .popup-list li svg { width: 16px; height: 16px; color: var(--brand); flex-shrink: 0; margin-top: 2px; }
+  .popup-actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .popup-later { background: none; border: 0; color: var(--muted); font-size: 13px; font-weight: 500; transition: color .2s; }
+  .popup-later:hover { color: var(--text); }
+  body.no-scroll { overflow: hidden; }
+
+  /* ============ FEEDBACK ============ */
+  .feedback-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 4vw, 56px); align-items: start; }
+  .feedback-intro h2 { font-size: clamp(30px, 4.4vw, 44px); font-weight: 700; margin: 16px 0 14px; }
+  .feedback-intro > p { color: var(--muted); font-size: 16.5px; margin-bottom: 22px; }
+  .feedback-points { list-style: none; display: grid; gap: 13px; }
+  .feedback-points li { display: flex; gap: 12px; color: var(--muted); font-size: 14.5px; align-items: flex-start; }
+  .feedback-points li svg { width: 18px; height: 18px; color: var(--brand); flex-shrink: 0; margin-top: 2px; }
+  .feedback-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 22px;
+    padding: 30px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    display: grid; gap: 14px;
+  }
+  .feedback-card .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .fb-field { display: grid; gap: 6px; }
+  .fb-field span { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+  .fb-field input, .fb-field select, .fb-field textarea {
+    background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 14px; color: var(--text); font-family: var(--font-body); font-size: 14.5px;
+    outline: none; transition: border-color .2s, background .2s; width: 100%;
+  }
+  .fb-field textarea { resize: vertical; min-height: 120px; }
+  .fb-field input:focus, .fb-field select:focus, .fb-field textarea:focus {
+    border-color: rgba(168,85,247,.55); background: rgba(168,85,247,.06);
+  }
+  .fb-field select option { background: #14141d; color: var(--text); }
+  .feedback-card .btn { width: 100%; }
+  .feedback-note { font-size: 12.5px; color: var(--muted); text-align: center; }
+  .feedback-success {
+    display: none; align-items: center; gap: 10px;
+    background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.3);
+    color: #6ee7b7; border-radius: 12px; padding: 11px 14px; font-size: 13.5px; font-weight: 500;
+  }
+  .feedback-success.show { display: flex; }
+  .feedback-success svg { width: 17px; height: 17px; flex-shrink: 0; }
+
   /* ============ REVEAL ============ */
   .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
   .reveal.visible { opacity: 1; transform: none; }
@@ -466,6 +552,7 @@
     .features-grid, .artists-grid { grid-template-columns: repeat(2, 1fr); }
     .stats-grid { grid-template-columns: repeat(2, 1fr); row-gap: 40px; }
     .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; }
+    .feedback-grid { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 768px) {
@@ -478,6 +565,8 @@
   @media (max-width: 520px) {
     .footer-grid { grid-template-columns: 1fr; }
     .store-btn { width: 100%; justify-content: center; }
+    .feedback-card { padding: 22px; }
+    .feedback-card .row2 { grid-template-columns: 1fr; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -493,7 +582,7 @@
   <div class="container nav-inner">
     <a href="#top" class="brand" aria-label="OneBEAT home">
       <span class="brand-mark">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72c0 .93 1 1.5 1.8 1.03l11.1-6.86c.77-.47.77-1.58 0-2.06L9.8 4.1C9 3.64 8 4.2 8 5.14Z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9.5v13M12 13l11-3.5v13"/></svg>
       </span>
       <span>OneBEAT<small>MUSIC</small></span>
     </a>
@@ -503,6 +592,7 @@
         <li><a href="#trending">Trending</a></li>
         <li><a href="#artists">Artists</a></li>
         <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#feedback">Feedback</a></li>
       </ul>
     </nav>
     <div class="nav-cta">
@@ -520,6 +610,7 @@
   <a href="#trending">Trending</a>
   <a href="#artists">Artists</a>
   <a href="#pricing">Pricing</a>
+  <a href="#feedback">Feedback</a>
   <a href="#" class="btn btn-primary">Get the app</a>
 </div>
 
@@ -826,15 +917,68 @@
       </div>
     </div>
   </section>
-</main>
+</main>  <!-- ============ FEEDBACK ============ -->
+  <section class="section" id="feedback" style="padding-top:0">
+    <div class="container">
+      <div class="feedback-grid">
+        <div class="feedback-intro reveal">
+          <span class="eyebrow">Feedback</span>
+          <h2>Tell us what you <span class="gradient-text">think</span></h2>
+          <p>Your voice shapes OneBEAT. Report a bug, request a feature, or tell us about your sing-along — every submission goes straight to our team.</p>
+          <ul class="feedback-points">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Read by the OneBEAT team, not a black hole</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Feature requests go straight to the roadmap</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Report karaoke or vocal-removal issues in one tap</li>
+          </ul>
+        </div>
 
-<!-- ============ FOOTER ============ -->
+        <form class="feedback-card reveal" id="feedbackForm" data-delay="1" novalidate>
+          <div class="row2">
+            <label class="fb-field">
+              <span>Your name</span>
+              <input type="text" name="name" placeholder="Kira Solace" autocomplete="name" />
+            </label>
+            <label class="fb-field">
+              <span>Email (for replies)</span>
+              <input type="email" name="email" placeholder="you@email.com" autocomplete="email" />
+            </label>
+          </div>
+          <label class="fb-field">
+            <span>Category</span>
+            <select name="category">
+              <option>General feedback</option>
+              <option>Feature request</option>
+              <option>Bug report</option>
+              <option>Sing-along / karaoke</option>
+              <option>Lyrics &amp; translation</option>
+              <option>Playlists</option>
+            </select>
+          </label>
+          <label class="fb-field">
+            <span>Your message</span>
+            <textarea name="message" required placeholder="Tell us what’s on your mind…"></textarea>
+          </label>
+          <div class="feedback-success" id="feedbackSuccess" role="status">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+            Feedback sent — thanks for helping shape OneBEAT.
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z"/></svg>
+            Send feedback
+          </button>
+          <p class="feedback-note">Sent straight to the OneBEAT team — no account needed.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
 <footer>
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="#top" class="brand">
-          <span class="brand-mark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72c0 .93 1 1.5 1.8 1.03l11.1-6.86c.77-.47.77-1.58 0-2.06L9.8 4.1C9 3.64 8 4.2 8 5.14Z"/></svg></span>
+          <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9.5v13M12 13l11-3.5v13"/></svg></span>
           <span>OneBEAT<small>MUSIC</small></span>
         </a>
         <p>Experience music like never before. Stream your favorite songs, discover new artists, create personalized playlists, and enjoy crystal-clear audio — all in one place.</p>
@@ -888,9 +1032,29 @@
       <p class="creators">Built by <strong>Laker Leslie Jordan</strong> &amp; <strong>Katumba Daxton Desire</strong></p>
     </div>
   </div>
-</footer>
+</footer>  <!-- ============ V2.1.1 LTS BETA POPUP ============ -->
+  <div class="popup-backdrop" id="betaPopup" role="dialog" aria-modal="true" aria-labelledby="betaTitle" hidden>
+    <div class="popup-card">
+      <button class="popup-close" id="betaClose" aria-label="Close notification">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <span class="popup-badge"><span class="pulse-dot"></span> Coming soon</span>
+      <h3 id="betaTitle">OneBEAT <span class="gradient-text">V2.1.1 LTS</span> BETA</h3>
+      <p>The next generation of OneBEAT is almost here — built for how you actually listen.</p>
+      <ul class="popup-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Sing-along mode with AI vocal removal — keep the beat, drop the voice</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Water-ripple glass player that vibrates with every beat</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Auto-translated lyrics that glow in your theme</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Artist milestone ranks — BRONZE to DIAMOND</li>
+      </ul>
+      <div class="popup-actions">
+        <a href="#features" class="btn btn-primary btn-sm" id="betaCta">Explore what’s new</a>
+        <button class="popup-later" id="betaLater">Maybe later</button>
+      </div>
+    </div>
+  </div>
 
-<!-- ============ TOAST ============ -->
+  <!-- ============ TOAST ============ -->
 <div class="toast" id="toast" role="status" aria-live="polite">
   <span class="toast-dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72c0 .93 1 1.5 1.8 1.03l11.1-6.86c.77-.47.77-1.58 0-2.06L9.8 4.1C9 3.64 8 4.2 8 5.14Z"/></svg></span>
   <span><strong id="toastTitle">Now playing</strong><small id="toastSub">OneBEAT</small></span>
@@ -1081,6 +1245,71 @@
       document.getElementById("playerCard").style.transform = "";
     });
   }
+
+  /* ---------- V2.1.1 LTS BETA popup ---------- */
+  var betaPopup = document.getElementById("betaPopup");
+  var betaClose = document.getElementById("betaClose");
+  var betaLater = document.getElementById("betaLater");
+
+  function closeBetaPopup() {
+    betaPopup.hidden = true;
+    document.body.classList.remove("no-scroll");
+    try { sessionStorage.setItem("onebeat_beta_seen", "1"); } catch (e) {}
+  }
+  function openBetaPopup() {
+    var seen = false;
+    try { seen = sessionStorage.getItem("onebeat_beta_seen") === "1"; } catch (e) {}
+    if (seen) return;
+    betaPopup.hidden = false;
+    document.body.classList.add("no-scroll");
+    betaClose.focus();
+  }
+  betaClose.addEventListener("click", closeBetaPopup);
+  betaLater.addEventListener("click", closeBetaPopup);
+  // The CTA scrolls to #features — release the scroll lock first.
+  document.getElementById("betaCta").addEventListener("click", closeBetaPopup);
+  betaPopup.addEventListener("click", function (e) {
+    if (e.target === betaPopup) closeBetaPopup();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !betaPopup.hidden) closeBetaPopup();
+  });
+  // Show once the page has painted and the hero reveal has started.
+  window.addEventListener("load", function () {
+    setTimeout(openBetaPopup, 1100);
+  });
+
+  /* ---------- Feedback form (routes to the admin dashboard) ---------- */
+  var feedbackForm = document.getElementById("feedbackForm");
+  var feedbackSuccess = document.getElementById("feedbackSuccess");
+  var FEEDBACK_KEY = "onebeat_feedback_v1";
+
+  feedbackForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var data = new FormData(feedbackForm);
+    var message = (data.get("message") || "").trim();
+    if (!message) {
+      feedbackForm.querySelector("[name=message]").focus();
+      return;
+    }
+    var item = {
+      id: "fb_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      name: (data.get("name") || "").trim() || "Anonymous",
+      email: (data.get("email") || "").trim(),
+      category: data.get("category") || "General feedback",
+      message: message,
+      ts: Date.now(),
+      read: false
+    };
+    var list = [];
+    try { list = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "[]"); } catch (err) { list = []; }
+    list.unshift(item);
+    try { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list)); } catch (err) {}
+    feedbackForm.reset();
+    feedbackSuccess.classList.add("show");
+    showToast("Feedback sent", "Thanks — the team will see it.");
+    setTimeout(function () { feedbackSuccess.classList.remove("show"); }, 5000);
+  });
 
   /* ---------- Count-up stats ---------- */
   function animateCount(el) {

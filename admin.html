@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OneBEAT — Admin Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23a855f7'/%3E%3Cstop offset='.5' stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%23f97316'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='%2307070b'/%3E%3Cpath d='M12 9.5v13M12 13l11-3.5v13' fill='none' stroke='url(%23g)' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07070b;--bg-soft:#0c0c13;--surface:rgba(255,255,255,.04);--surface-strong:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.09);--text:#f4f4f8;--muted:#9d9dab;
+  --brand:#a855f7;--brand-2:#ec4899;--brand-3:#f97316;
+  --grad:linear-gradient(120deg,#a855f7,#ec4899 55%,#f97316);
+  --grad-soft:linear-gradient(120deg,rgba(168,85,247,.16),rgba(236,72,153,.16));
+  --green:#34d399;--red:#f87171;--yellow:#fbbf24;--blue:#60a5fa;
+  --radius:14px;--radius-sm:10px;
+  --font-display:"Space Grotesk",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --sidebar-w:260px;
+}
+html,body{height:100%;font-family:var(--font-body);background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+img,svg{display:block}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(168,85,247,.4);color:#fff}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:99px}
+::-webkit-scrollbar-track{background:transparent}
+
+.app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;height:100vh;overflow:hidden}
+
+/* ===== SIDEBAR ===== */
+.sidebar{grid-row:1/3;display:flex;flex-direction:column;background:var(--bg-soft);border-right:1px solid var(--border);padding:16px 10px;gap:6px;overflow-y:auto;overflow-x:hidden}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px;font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:-.02em;margin-bottom:8px}
+.brand-mark{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--grad);box-shadow:0 6px 20px -6px rgba(236,72,153,.55)}
+.brand-mark svg{width:16px;height:16px;color:#fff}
+.brand small{display:block;font-size:8px;letter-spacing:.3em;color:var(--muted);font-family:var(--font-body);font-weight:600;margin-top:-3px}
+.side-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:16px 12px 6px;user-select:none}
+.side-label:first-of-type{padding-top:4px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);color:var(--muted);font-size:13.5px;font-weight:600;border:0;background:none;text-align:left;width:100%;transition:all .2s var(--ease)}
+.nav-item:hover{color:var(--text);background:var(--surface-strong)}
+.nav-item.active{color:#fff;background:rgba(168,85,247,.18)}
+.nav-item.active::before{content:"";position:absolute;left:0;width:3px;height:20px;border-radius:0 3px 3px 0;background:var(--grad)}
+.nav-item{position:relative}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;background:var(--brand-2);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;min-width:20px;text-align:center}
+.sidebar-footer{margin-top:auto;border-top:1px solid var(--border);padding:14px 10px 6px}
+.sidebar-footer .admin-info{display:flex;align-items:center;gap:10px}
+.admin-avatar{width:34px;height:34px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-weight:700;font-size:12px;flex-shrink:0}
+.admin-name{font-size:13px;font-weight:600}
+.admin-role{font-size:11px;color:var(--muted)}
+
+/* ===== MAIN ===== */
+.main{grid-row:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:14px 28px;background:linear-gradient(to bottom,var(--bg) 70%,transparent);backdrop-filter:blur(12px)}
+.topbar h1{font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-.02em}
+.topbar-actions{margin-left:auto;display:flex;align-items:center;gap:12px}
+.topbar-search{position:relative}
+.topbar-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
+.topbar-search input{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:9px 14px 9px 36px;color:var(--text);font-size:13px;width:240px;outline:none;transition:border-color .2s}
+.topbar-search input:focus{border-color:rgba(168,85,247,.5)}
+.notif-btn{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;color:var(--muted);transition:all .2s}
+.notif-btn:hover{color:var(--text);border-color:rgba(168,85,247,.4)}
+.notif-btn svg{width:18px;height:18px}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--brand-2);border:2px solid var(--bg)}
+
+.content{padding:8px 28px 40px;flex:1}
+
+/* ===== CARDS & GRID ===== */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all .3s var(--ease);position:relative;overflow:hidden}
+.stat-card:hover{border-color:rgba(255,255,255,.16);transform:translateY(-2px)}
+.stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:0;transition:opacity .3s}
+.stat-card:hover::before{opacity:1}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px}
+.stat-card h3{font-size:26px;font-weight:700;font-family:var(--font-display);letter-spacing:-.03em}
+.stat-card p{font-size:12.5px;color:var(--muted);margin-top:2px}
+.stat-card .trend{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-top:8px;padding:3px 8px;border-radius:99px}
+.trend.up{color:var(--green);background:rgba(52,211,153,.1)}
+.trend.down{color:var(--red);background:rgba(248,113,113,.1)}
+
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;overflow:hidden}
+.chart-card.full{grid-column:1/-1}
+.chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.chart-head h3{font-size:15px;font-weight:700}
+.chart-head select{background:var(--surface-strong);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 12px;color:var(--text);font-size:12px}
+.chart-area{position:relative;height:200px}
+.chart-bars{display:flex;align-items:flex-end;gap:4px;height:100%;padding-bottom:24px}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;background:var(--grad);min-height:4px;transition:height .5s var(--ease);position:relative;cursor:pointer}
+.chart-bar:hover{opacity:.85}
+.chart-bar::after{content:attr(data-val);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .2s}
+.chart-bar:hover::after{opacity:1}
+.chart-labels{display:flex;justify-content:space-between;position:absolute;bottom:0;left:0;right:0;font-size:10px;color:var(--muted)}
+
+/* ===== TABLES ===== */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.table-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:12px;flex-wrap:wrap}
+.table-head h3{font-size:15px;font-weight:700}
+.table-filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter-select{background:var(--surface-strong);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;color:var(--text);font-size:12px;cursor:pointer}
+.filter-select option{background:var(--bg)}
+.table-search{background:var(--surface-strong);border:1px solid var(--border);border-radius:999px;padding:7px 12px;color:var(--text);font-size:12px;width:180px;outline:none}
+.table-search:focus{border-color:rgba(168,85,247,.5)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 16px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.table-avatar{width:36px;height:36px;border-radius:50%;display:inline-grid;place-items:center;font-weight:700;font-size:11px;flex-shrink:0;vertical-align:middle;margin-right:10px}
+.table-artist-cell{display:flex;align-items:center;gap:0}
+.table-scroll{overflow-x:auto}
+.table-pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.page-btns{display:flex;gap:4px}
+.page-btn{background:var(--surface-strong);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 12px;color:var(--muted);font-size:12px;transition:all .2s}
+.page-btn:hover,.page-btn.active{color:#fff;border-color:rgba(168,85,247,.5);background:rgba(168,85,247,.15)}
+
+/* ===== BADGES & STATUS ===== */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.badge-green{color:var(--green);background:rgba(52,211,153,.12)}
+.badge-yellow{color:var(--yellow);background:rgba(251,191,36,.12)}
+.badge-red{color:var(--red);background:rgba(248,113,113,.12)}
+.badge-blue{color:var(--blue);background:rgba(96,165,250,.12)}
+.badge-purple{color:var(--brand);background:rgba(168,85,247,.12)}
+.badge-gray{color:var(--muted);background:rgba(255,255,255,.06)}
+.verified{color:var(--brand)}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:13px;padding:8px 16px;border-radius:var(--radius-sm);border:1px solid transparent;transition:all .2s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 6px 20px -6px rgba(236,72,153,.5)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px -6px rgba(236,72,153,.65)}
+.btn-ghost{background:var(--surface);color:var(--text);border-color:var(--border)}
+.btn-ghost:hover{background:var(--surface-strong);border-color:rgba(255,255,255,.18)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--red);border-color:rgba(248,113,113,.25)}
+.btn-danger:hover{background:rgba(248,113,113,.2)}
+.btn-success{background:rgba(52,211,153,.12);color:var(--green);border-color:rgba(52,211,153,.25)}
+.btn-success:hover{background:rgba(52,211,153,.2)}
+.action-btns{display:flex;gap:6px;flex-wrap:wrap}
+.action-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 8px;color:var(--muted);transition:all .2s}
+.action-btn:hover{color:var(--text);border-color:rgba(255,255,255,.2);background:var(--surface-strong)}
+.action-btn svg{width:14px;height:14px}
+.action-btn.del:hover{color:var(--red);border-color:rgba(248,113,113,.4)}
+
+/* ===== MODAL ===== */
+.modal-backdrop{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:rgba(7,7,11,.75);backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-backdrop.open{opacity:1;pointer-events:auto}
+.modal{width:min(600px,95%);max-height:90vh;background:linear-gradient(180deg,rgba(20,20,32,.98),rgba(12,12,20,.99));border:1px solid var(--border);border-radius:20px;padding:28px;overflow-y:auto;transform:translateY(20px);transition:transform .3s var(--ease)}
+.modal-backdrop.open .modal{transform:none}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-head h2{font-family:var(--font-display);font-size:20px;font-weight:700}
+.modal-close{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px;color:var(--muted);transition:all .2s}
+.modal-close:hover{color:var(--text);border-color:rgba(168,85,247,.5)}
+.modal-close svg{width:16px;height:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--text);font-size:13.5px;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(168,85,247,.5)}
+.form-group select option{background:var(--bg)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ===== ACTIVITY FEED ===== */
+.activity-list{display:grid;gap:2px}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--radius-sm);transition:background .2s}
+.activity-item:hover{background:var(--surface)}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.activity-text{font-size:13px;line-height:1.5}
+.activity-text strong{color:var(--text)}
+.activity-time{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;align-items:center;gap:10px;background:rgba(20,20,32,.95);border:1px solid var(--border);border-radius:var(--radius);padding:12px 18px;font-size:13px;font-weight:500;box-shadow:0 20px 60px -12px rgba(0,0,0,.8);backdrop-filter:blur(16px);transform:translateY(80px);opacity:0;transition:all .4s var(--ease);max-width:380px}
+.toast.show{transform:none;opacity:1}
+.toast svg{width:18px;height:18px;flex-shrink:0}
+
+/* ===== EMPTY ===== */
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+.empty svg{width:48px;height:48px;margin:0 auto 14px;opacity:.4}
+.empty h3{color:var(--text);font-size:17px;margin-bottom:6px}
+
+/* ===== REPORTS ===== */
+.report-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.report-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.report-body{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ===== SETTINGS ===== */
+.settings-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+.settings-section h3{font-size:15px;font-weight:700;margin-bottom:16px}
+.toggle{position:relative;width:44px;height:24px;border-radius:99px;background:var(--surface-strong);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.toggle.on{background:var(--brand);border-color:var(--brand)}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle.on::after{transform:translateX(20px)}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:13.5px;font-weight:500}
+.setting-desc{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ===== NOTIFICATION PANEL ===== */
+.notif-panel{position:fixed;top:0;right:-400px;width:380px;height:100vh;z-index:90;background:var(--bg-soft);border-left:1px solid var(--border);padding:20px;overflow-y:auto;transition:right .35s var(--ease);box-shadow:-20px 0 60px -20px rgba(0,0,0,.6)}
+.notif-panel.open{right:0}
+.notif-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.notif-head h3{font-size:16px;font-weight:700}
+.notif-item{padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:8px;background:var(--surface);transition:all .2s}
+.notif-item.unread{border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.06)}
+.notif-item h4{font-size:13px;font-weight:600;margin-bottom:4px}
+.notif-item p{font-size:12px;color:var(--muted);line-height:1.5}
+.notif-item .notif-time{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){.app{grid-template-columns:1fr}.sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;width:var(--sidebar-w);transform:translateX(-100%);transition:transform .3s var(--ease);box-shadow:20px 0 60px -20px rgba(0,0,0,.7)}.sidebar.open{transform:none}.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55;opacity:0;pointer-events:none;transition:opacity .3s}.scrim.show{opacity:1;pointer-events:auto}.hamburger{display:flex!important}.chart-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}}
+@media(max-width:768px){.content{padding:8px 14px 40px}.topbar{padding:10px 14px}.form-row{grid-template-columns:1fr}.topbar-search input{width:160px}}
+.hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;color:var(--text)}
+.hamburger svg{width:18px;height:18px}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.fade-in{animation:fadeIn .4s var(--ease) both}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9.5v13M12 13l11-3.5v13"/></svg></span>
+      <span>OneBEAT<small>ADMIN</small></span>
+    </a>
+    <div class="side-label">Main</div>
+    <button class="nav-item active" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
+    <div class="side-label">Management</div>
+    <button class="nav-item" data-page="artists"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Artists<span class="nav-badge" id="artistBadge">7</span></button>
+    <button class="nav-item" data-page="applications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Applications<span class="nav-badge" id="appBadge">3</span></button>
+    <button class="nav-item" data-page="music"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Music Library</button>
+    <button class="nav-item" data-page="uploads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Pending Uploads<span class="nav-badge" id="uploadBadge">5</span></button>
+    <button class="nav-item" data-page="featured"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Featured Content</button>
+    <div class="side-label">Moderation</div>
+    <button class="nav-item" data-page="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>Reports<span class="nav-badge" id="reportBadge">4</span></button>
+    <button class="nav-item" data-page="activity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Activity Log</button>
+    <div class="side-label">Insights</div>
+    <button class="nav-item" data-page="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</button>
+    <button class="nav-item" data-page="revenue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Revenue</button>
+    <div class="side-label">System</div>
+    <button class="nav-item" data-page="admins"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Admin Roles</button>
+    <button class="nav-item" data-page="notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications</button>
+    <button class="nav-item" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>System Settings</button>
+
+    <div class="sidebar-footer">
+      <div class="admin-info">
+        <span class="admin-avatar">SA</span>
+        <div><div class="admin-name">Super Admin</div><div class="admin-role">Platform Owner</div></div>
+      </div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="main">
+    <div class="topbar">
+      <button class="hamburger" id="hamburger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <h1 id="pageTitle">Dashboard</h1>
+      <div class="topbar-actions">
+        <div class="topbar-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" placeholder="Search..." id="globalSearch"/>
+        </div>
+        <button class="notif-btn" id="notifToggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+        <a href="index.html" class="btn btn-ghost btn-sm">View Platform</a>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-head"><h3>Notifications</h3><button class="modal-close" id="closeNotif"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <div id="notifList"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===== SVG ICONS ===== */
+var I={
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  ban:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>',
+  flag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
+  music:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+  upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  check_circle:'<svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+};
+
+/* ===== DATA STORE ===== */
+var GENRES=["Pop","R&B","Hip Hop","Afrobeat","Electronic","Rock","Indie","Jazz","Soul","Latin","Country","Classical"];
+var COUNTRIES=["Nigeria","United States","United Kingdom","South Africa","Ghana","Kenya","Canada","Germany","France","Japan","Brazil","Australia"];
+var STATUSES=["pending","under_review","approved","rejected","changes_requested","suspended"];
+var UPLOAD_STATUSES=["draft","pending_review","approved","rejected","published"];
+
+function genId(){return "id_"+Date.now()+"_"+Math.random().toString(36).substr(2,6)}
+
+var DEFAULT_ARTISTS=[
+  {id:"a1",stageName:"Kira Solace",legalName:"Kira M. Solace",email:"kira@onebeat.io",phone:"+1-555-0101",country:"United States",location:"Los Angeles, CA",type:"Solo",genre:"Pop",bio:"Independent pop artist known for ethereal vocals and cinematic production. Building a growing fanbase with dreamy, atmospheric tracks.",verified:true,status:"approved",followers:84200,songs:12,albums:2,streams:582000,regDate:"2024-09-15",avatar:"linear-gradient(135deg,#a855f7,#ec4899)",socials:{instagram:"@kirasolace",twitter:"@kira_solace",spotify:"Kira Solace"},label:"Independent"},
+  {id:"a2",stageName:"DJ Kavana",legalName:"Kwame Asante",email:"kavana@onebeat.io",phone:"+234-800-1234",country:"Nigeria",location:"Lagos",type:"Solo",genre:"Afrobeat",bio:"Afrobeats artist blending traditional rhythms with modern production. Rising star in the West African scene.",verified:true,status:"approved",followers:62100,songs:9,albums:1,streams:431000,regDate:"2024-10-05",avatar:"linear-gradient(135deg,#f97316,#ec4899)",socials:{instagram:"@djkavana",twitter:"@djkavana"},label:"Independent"},
+  {id:"a3",stageName:"The Velvet Echo",legalName:"Velvet Echo Band",email:"info@velvetecho.com",phone:"+44-20-7946-0958",country:"United Kingdom",location:"London",type:"Band",genre:"Indie",bio:"British indie rock band with a dreamy, atmospheric sound. Known for lush guitar textures and introspective lyrics.",verified:true,status:"approved",followers:47300,songs:7,albums:1,streams:312000,regDate:"2024-11-12",avatar:"linear-gradient(135deg,#60a5fa,#a78bfa)",socials:{instagram:"@thevelvetecho",twitter:"@velvetecho"},label:"Independent"},
+  {id:"a4",stageName:"Lena Marr",legalName:"Lena Marr",email:"lena@onebeat.io",phone:"+1-555-0202",country:"United States",location:"Atlanta, GA",type:"Solo",genre:"R&B",bio:"Soulful R&B artist with smooth vocals and honest storytelling. Crafting intimate songs about love and growth.",verified:true,status:"approved",followers:38700,songs:5,albums:1,streams:247000,regDate:"2025-01-20",avatar:"linear-gradient(135deg,#ec4899,#f472b6)",socials:{instagram:"@lenamarr",twitter:"@lena_marr"},label:"Independent"},
+  {id:"a5",stageName:"Aya Blaze",legalName:"Ayanda Nkosi",email:"aya@onebeat.io",phone:"+27-11-234-5678",country:"South Africa",location:"Johannesburg",type:"Solo",genre:"Electronic",bio:"Amapiano artist bringing South African sounds to a global audience. Blending deep house with traditional rhythms.",verified:false,status:"approved",followers:31200,songs:4,albums:1,streams:198000,regDate:"2025-03-08",avatar:"linear-gradient(135deg,#fbbf24,#f97316)",socials:{instagram:"@ayablaze",twitter:"@aya_blaze"},label:"Independent"},
+  {id:"a6",stageName:"Zephyr",legalName:"Marcus Chen",email:"zephyr@onebeat.io",phone:"+1-555-0303",country:"Canada",location:"Toronto",type:"Solo",genre:"Electronic",bio:"Electronic producer crafting hypnotic soundscapes. Experimenting with ambient textures and downtempo beats.",verified:false,status:"approved",followers:22800,songs:6,albums:1,streams:156000,regDate:"2025-04-15",avatar:"linear-gradient(135deg,#f43f5e,#a855f7)",socials:{instagram:"@zephyrmusic",twitter:"@zephyr_beats"},label:"Independent"},
+  {id:"a7",stageName:"Nova Rayne",legalName:"Nova Rayne Williams",email:"nova@onebeat.io",phone:"+1-555-0404",country:"United States",location:"New York",type:"Solo",genre:"Pop",bio:"Pop singer-songwriter blending catchy hooks with meaningful lyrics. Fresh voice in the indie-pop scene.",verified:true,status:"approved",followers:15400,songs:3,albums:1,streams:112000,regDate:"2025-06-01",avatar:"linear-gradient(135deg,#22d3ee,#6366f1)",socials:{instagram:"@novarayne",twitter:"@nova_rayne"},label:"Independent"}
+];
+
+var DEFAULT_APPLICATIONS=[
+  {id:"app1",stageName:"Neon Pulse",email:"neon@music.com",phone:"+1-555-1111",country:"United States",location:"Miami, FL",type:"Solo",genre:"Electronic",bio:"EDM producer looking to reach a wider audience.",status:"pending",regDate:"2025-08-10",avatar:"linear-gradient(135deg,#4ade80,#22d3ee)"},
+  {id:"app2",stageName:"Afro Kings",email:"afrokings@music.com",phone:"+233-20-123-4567",country:"Ghana",location:"Accra",type:"Group",genre:"Afrobeat",bio:"Dynamic Afrobeat duo fusing highlife with modern beats.",status:"under_review",regDate:"2025-08-05",avatar:"linear-gradient(135deg,#f97316,#ef4444)"},
+  {id:"app3",stageName:"Luna Grey",email:"luna@music.com",phone:"+44-7911-123456",country:"United Kingdom",location:"Manchester",type:"Solo",genre:"Indie",bio:"Singer-songwriter with haunting melodies and poetic lyrics.",status:"pending",regDate:"2025-08-18",avatar:"linear-gradient(135deg,#a78bfa,#ec4899)"}
+];
+
+var DEFAULT_SONGS=[
+  {id:"s1",title:"Neon Dreams",artist:"Kira Solace",album:"Electric Sky",genre:"Pop",duration:204,status:"published",streams:142000,likes:8900,downloads:2300,uploadDate:"2024-09-15"},
+  {id:"s2",title:"Golden Hour",artist:"The Velvet Echo",album:"Daylight",genre:"Indie",duration:178,status:"published",streams:108000,likes:6200,downloads:1800,uploadDate:"2024-10-01"},
+  {id:"s3",title:"Midnight Drive",artist:"Aya Blaze",album:"Night Routes",genre:"Electronic",duration:252,status:"published",streams:94000,likes:5400,downloads:1600,uploadDate:"2024-10-15"},
+  {id:"s4",title:"Sugar Rush",artist:"DJ Kavana",album:"High Voltage",genre:"Afrobeat",duration:181,status:"published",streams:82000,likes:4800,downloads:1400,uploadDate:"2024-11-01"},
+  {id:"s5",title:"Ocean Eyes",artist:"Lena Marr",album:"Tides",genre:"R&B",duration:227,status:"published",streams:72000,likes:4100,downloads:1200,uploadDate:"2024-11-15"},
+  {id:"s6",title:"Pulse",artist:"Zephyr",album:"Signal",genre:"Electronic",duration:161,status:"published",streams:58000,likes:3700,downloads:1100,uploadDate:"2024-12-01"},
+  {id:"s7",title:"Velvet Sky",artist:"Kira Solace",album:"Electric Sky",genre:"Pop",duration:213,status:"published",streams:52000,likes:3400,downloads:950,uploadDate:"2024-12-15"},
+  {id:"s8",title:"Lagos Nights",artist:"DJ Kavana",album:"High Voltage",genre:"Afrobeat",duration:198,status:"published",streams:48000,likes:3100,downloads:880,uploadDate:"2025-01-01"},
+  {id:"s9",title:"Chrome Hearts",artist:"Nova Rayne",album:"Static Love",genre:"Pop",duration:185,status:"published",streams:42000,likes:2800,downloads:780,uploadDate:"2025-01-15"},
+  {id:"s10",title:"Afterglow",artist:"The Velvet Echo",album:"Daylight",genre:"Indie",duration:232,status:"published",streams:38000,likes:2400,downloads:650,uploadDate:"2025-02-01"},
+  {id:"s11",title:"Static Bloom",artist:"Zephyr",album:"Signal",genre:"Electronic",duration:176,status:"pending_review",streams:0,likes:0,downloads:0,uploadDate:"2025-08-15"},
+  {id:"s12",title:"Ember & Ash",artist:"Kira Solace",album:"Electric Sky",genre:"Pop",duration:241,status:"pending_review",streams:0,likes:0,downloads:0,uploadDate:"2025-08-18"},
+  {id:"s13",title:"Rainfall",artist:"Lena Marr",album:"Tides",genre:"R&B",duration:200,status:"draft",streams:0,likes:0,downloads:0,uploadDate:"2025-08-19"},
+  {id:"s14",title:"Thunder Roll",artist:"DJ Kavana",album:"High Voltage",genre:"Afrobeat",duration:215,status:"pending_review",streams:0,likes:0,downloads:0,uploadDate:"2025-08-17"},
+  {id:"s15",title:"Starlight",artist:"Nova Rayne",album:"Static Love",genre:"Pop",duration:190,status:"published",streams:28000,likes:1600,downloads:450,uploadDate:"2025-03-01"}
+];
+
+var DEFAULT_ALBUMS=[
+  {id:"al1",title:"Electric Sky",artist:"Kira Solace",genre:"Pop",tracks:8,released:"2024-09-15",status:"published",streams:320000},
+  {id:"al2",title:"Daylight",artist:"The Velvet Echo",genre:"Indie",tracks:10,released:"2024-10-01",status:"published",streams:218000},
+  {id:"al3",title:"High Voltage",artist:"DJ Kavana",genre:"Afrobeat",tracks:12,released:"2024-11-01",status:"published",streams:196000},
+  {id:"al4",title:"Tides",artist:"Lena Marr",genre:"R&B",tracks:9,released:"2024-11-15",status:"published",streams:147000},
+  {id:"al5",title:"Night Routes",artist:"Aya Blaze",genre:"Electronic",tracks:7,released:"2024-10-15",status:"published",streams:94000},
+  {id:"al6",title:"Signal",artist:"Zephyr",genre:"Electronic",tracks:11,released:"2024-12-01",status:"published",streams:82000},
+  {id:"al7",title:"Static Love",artist:"Nova Rayne",genre:"Pop",tracks:8,released:"2025-01-15",status:"published",streams:56000},
+  {id:"al8",title:"Midnight Sessions",artist:"Kira Solace",genre:"Pop",tracks:6,released:"2025-08-20",status:"pending_review",streams:0}
+];
+
+var DEFAULT_REPORTS=[
+  {id:"r1",type:"Copyright",target:"Song: Night Drive",reporter:"Aya Blaze",reason:"Unauthorized sample from my track used without credit",status:"new",date:"2025-08-18",priority:"high"},
+  {id:"r2",type:"Inappropriate Content",target:"Artist Profile: Unknown User",reporter:"Listener #48291",reason:"Profile contains offensive imagery",status:"new",date:"2025-08-17",priority:"high"},
+  {id:"r3",type:"Song",target:"Song: Fake Gold",reporter:"DJ Kavana",reason:"Song appears to be impersonating my style with misleading metadata",status:"under_review",date:"2025-08-15",priority:"medium"},
+  {id:"r4",type:"Comment",target:"Comment on: Neon Dreams",reporter:"Kira Solace",reason:"Spam and hate speech in comments section",status:"resolved",date:"2025-08-12",priority:"low"}
+];
+
+var DEFAULT_NOTIFICATIONS=[
+  {id:"n1",title:"New Artist Application",message:"Neon Pulse has submitted an artist application for review",time:"2 hours ago",read:false,type:"info"},
+  {id:"n2",title:"Copyright Report Filed",message:"Aya Blaze filed a copyright claim on 'Night Drive' sample usage",time:"5 hours ago",read:false,type:"warning"},
+  {id:"n3",title:"Upload Pending Review",message:"Kira Solace uploaded 'Ember & Ash' — awaiting approval",time:"1 day ago",read:false,type:"info"},
+  {id:"n4",title:"Application Under Review",message:"Afro Kings application moved to under review status",time:"2 days ago",read:true,type:"info"},
+  {id:"n5",title:"Milestone Reached",message:"DJ Kavana surpassed 400K total streams on the platform",time:"3 days ago",read:true,type:"success"},
+  {id:"n6",title:"Report Resolved",message:"Comment spam report on Neon Dreams has been resolved",time:"5 days ago",read:true,type:"success"}
+];
+
+var DEFAULT_ADMINS=[
+  {id:"adm1",name:"Super Admin",email:"admin@onebeat.io",role:"super_admin",status:"active",lastLogin:"2025-08-20"},
+  {id:"adm2",name:"Sarah Chen",email:"sarah@onebeat.io",role:"content_admin",status:"active",lastLogin:"2025-08-20"},
+  {id:"adm3",name:"James Okafor",email:"james@onebeat.io",role:"artist_manager",status:"active",lastLogin:"2025-08-19"},
+  {id:"adm4",name:"Emily Davis",email:"emily@onebeat.io",role:"analytics_admin",status:"active",lastLogin:"2025-08-18"},
+  {id:"adm5",name:"Marcus Williams",email:"marcus@onebeat.io",role:"finance_admin",status:"inactive",lastLogin:"2025-07-15"}
+];
+
+var DEFAULT_ACTIVITY=[
+  {id:"act1",action:"Admin approved artist",subject:"Nova Rayne",admin:"Super Admin",time:"2 hours ago",type:"approval"},
+  {id:"act2",action:"New artist application",subject:"Neon Pulse",admin:"System",time:"2 hours ago",type:"info"},
+  {id:"act3",action:"Copyright report filed",subject:"Night Drive by Aya Blaze",admin:"Aya Blaze",time:"5 hours ago",type:"warning"},
+  {id:"act4",action:"Song uploaded",subject:"Ember & Ash by Kira Solace",admin:"Kira Solace",time:"1 day ago",type:"info"},
+  {id:"act5",action:"Album published",subject:"Static Love by Nova Rayne",admin:"Sarah Chen",time:"2 days ago",type:"approval"},
+  {id:"act6",action:"User registered",subject:"New listener account created",admin:"System",time:"2 days ago",type:"info"},
+  {id:"act7",action:"Artist verified",subject:"Kira Solace",admin:"Super Admin",time:"3 days ago",type:"approval"},
+  {id:"act8",action:"Song reported",subject:"Fake Gold — impersonation report",admin:"DJ Kavana",time:"3 days ago",type:"warning"},
+  {id:"act9",action:"Application reviewed",subject:"Afro Kings — moved to under review",admin:"James Okafor",time:"3 days ago",type:"info"},
+  {id:"act10",action:"Platform settings updated",subject:"Upload limits adjusted to 50MB",admin:"Super Admin",time:"5 days ago",type:"info"}
+];
+
+var DEFAULT_FEATURED={
+  featuredArtist:"a1",
+  featuredSong:"s1",
+  featuredAlbum:"al1",
+  trendingSongs:["s1","s4","s3"],
+  newReleases:["s15","s9"],
+  genreSpotlight:"Afrobeat"
+};
+
+var DEFAULT_SETTINGS={
+  platformName:"OneBEAT",
+  uploadLimitMB:50,
+  audioFormats:["mp3","wav","flac","aac"],
+  maintenanceMode:false,
+  registrations:true,
+  minArtistFollowers:1000,
+  maxBioLength:2000,
+  copyrightClaimEmail:"copyright@onebeat.io"
+};
+
+/* ===== LOAD / SAVE ===== */
+function load(key,def){try{var v=localStorage.getItem("ob_admin_"+key);return v?JSON.parse(v):def}catch(e){return def}}
+function save(key,val){try{localStorage.setItem("ob_admin_"+key,JSON.stringify(val))}catch(e){}}
+
+var artists=load("artists",DEFAULT_ARTISTS);
+var apps=load("apps",DEFAULT_APPLICATIONS);
+var songs=load("songs",DEFAULT_SONGS);
+var albums=load("albums",DEFAULT_ALBUMS);
+var reports=load("reports",DEFAULT_REPORTS);
+var notifications=load("notifications",DEFAULT_NOTIFICATIONS);
+var admins=load("admins",DEFAULT_ADMINS);
+var activity=load("activity",DEFAULT_ACTIVITY);
+var featured=load("featured",DEFAULT_FEATURED);
+var settings=load("settings",DEFAULT_SETTINGS);
+
+function persist(){
+  save("artists",artists);save("apps",apps);save("songs",songs);
+  save("albums",albums);save("reports",reports);save("notifications",notifications);
+  save("admins",admins);save("activity",activity);save("featured",featured);save("settings",settings);
+}
+
+/* ===== HELPERS ===== */
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+function fmt(n){if(n>=1e9)return(n/1e9).toFixed(1)+"B";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e3)return(n/1e3).toFixed(1)+"K";return n.toString()}
+function fmtDur(s){var m=Math.floor(s/60);return m+":"+(s%60<10?"0":"")+(s%60)}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function initials(name){return name.split(" ").map(function(w){return w[0]}).join("").substring(0,2).toUpperCase()}
+function statusBadge(s){var map={pending:"badge-yellow",under_review:"badge-blue",approved:"badge-green",rejected:"badge-red",changes_requested:"badge-yellow",suspended:"badge-red",draft:"badge-gray",published:"badge-green",pending_review:"badge-yellow",new:"badge-red",under_review2:"badge-blue",resolved:"badge-green",dismissed:"badge-gray"};return '<span class="badge '+(map[s]||"badge-gray")+'">'+esc(s.replace(/_/g," "))+'</span>'}
+function roleBadge(r){var map={super_admin:"badge-purple",content_admin:"badge-blue",artist_manager:"badge-green",analytics_admin:"badge-yellow",finance_admin:"badge-red"};var labels={super_admin:"Super Admin",content_admin:"Content Admin",artist_manager:"Artist Manager",analytics_admin:"Analytics Admin",finance_admin:"Finance Admin"};return '<span class="badge '+(map[r]||"badge-gray")+'">'+esc(labels[r]||r)+'</span>'}
+
+function addActivity(action,subject,admin,type){
+  activity.unshift({id:genId(),action:action,subject:subject,admin:admin,time:"Just now",type:type||"info"});
+  if(activity.length>100)activity=activity.slice(0,100);
+  persist();
+}
+
+function showToast(msg){
+  var t=$("#toast");
+  t.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>'+esc(msg)+'</span>';
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer=setTimeout(function(){t.classList.remove("show")},3500);
+}
+
+/* ===== NAVIGATION ===== */
+var currentPage="dashboard";
+var pageTitles={dashboard:"Dashboard",artists:"Artists",applications:"Artist Applications",music:"Music Library",uploads:"Pending Uploads",featured:"Featured Content",reports:"Reports",activity:"Activity Log",analytics:"Analytics",revenue:"Revenue",admins:"Admin Roles",notifications:"Notifications",settings:"System Settings"};
+
+function setPage(page){
+  currentPage=page;
+  $$(".nav-item").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});
+  $("#pageTitle").textContent=pageTitles[page]||page;
+  renderPage();
+  closeSidebar();
+}
+
+/* ===== RENDERERS ===== */
+function renderPage(){
+  var c=$("#content");
+  c.innerHTML="";
+  c.className="content fade-in";
+  var fn=pages[currentPage];
+  if(fn)c.innerHTML=fn();
+  bindPageEvents();
+}
+
+/* ---------- DASHBOARD ---------- */
+var pages={};
+pages.dashboard=function(){
+  var totalStreams=songs.reduce(function(s,song){return s+song.streams},0);
+  var totalLikes=songs.reduce(function(s,song){return s+song.likes},0);
+  var totalDownloads=songs.reduce(function(s,song){return s+song.downloads},0);
+  var totalFollowers=artists.reduce(function(s,a){return s+a.followers},0);
+  var pendingApps=apps.filter(function(a){return a.status==="pending"||a.status==="under_review"}).length;
+  var approvedArtists=artists.filter(function(a){return a.status==="approved"}).length;
+  var pendingUploads=songs.filter(function(s){return s.status==="pending_review"}).length;
+  var openReports=reports.filter(function(r){return r.status==="new"||r.status==="under_review"}).length;
+
+  var stats=[
+    {label:"Total Artists",value:artists.length,icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',color:"var(--brand)",trend:"+2 this week",up:true},
+    {label:"Pending Applications",value:pendingApps,icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',color:"var(--yellow)",trend:"Needs attention",up:false},
+    {label:"Total Songs",value:songs.length,icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',color:"var(--green)",trend:"+3 this week",up:true},
+    {label:"Total Streams",value:totalStreams,icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>',color:"var(--brand-2)",trend:"+12.3%",up:true},
+    {label:"Total Listeners",value:12400,icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',color:"var(--blue)",trend:"+8.7%",up:true},
+    {label:"Total Albums",value:albums.length,icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>',color:"var(--brand-3)",trend:"+1 this month",up:true},
+    {label:"Total Likes",value:totalLikes,icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',color:"var(--red)",trend:"+5.2%",up:true},
+    {label:"Platform Revenue",value:"$12.4K",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',color:"var(--green)",trend:"+18.5%",up:true},
+    {label:"Pending Uploads",value:pendingUploads,icon:I.upload,color:"var(--yellow)",trend:"Awaiting review",up:false},
+    {label:"Open Reports",value:openReports,icon:I.flag,color:"var(--red)",trend:openReports+" active",up:false},
+    {label:"Approved Artists",value:approvedArtists,icon:I.check_circle,color:"var(--green)",trend:approvedArtists+" verified",up:true},
+    {label:"Active Users",value:"12.4K",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',color:"var(--blue)",trend:"+4.1%",up:true}
+  ];
+
+  var monthlyStreams=[2.1,2.4,2.8,3.2,3.5,3.9,4.2,4.8,5.1,5.6,6.0,6.5];
+  var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var maxStream=Math.max.apply(null,monthlyStreams);
+
+  var recentActivityHtml=activity.slice(0,8).map(function(a){
+    var colors={approval:"var(--green)",warning:"var(--yellow)",info:"var(--blue)"};
+    return '<div class="activity-item"><div class="activity-dot" style="background:'+(colors[a.type]||"var(--muted)")+'"></div><div><div class="activity-text"><strong>'+esc(a.admin)+'</strong> — '+esc(a.action)+': '+esc(a.subject)+'</div><div class="activity-time">'+esc(a.time)+'</div></div></div>';
+  }).join("");
+
+  var topSongs=songs.filter(function(s){return s.status==="published"}).sort(function(a,b){return b.streams-a.streams}).slice(0,5);
+
+  return '<div class="stat-grid">'+stats.map(function(s){
+    return '<div class="stat-card"><div class="stat-icon" style="background:rgba(168,85,247,.12);color:'+s.color+'">'+s.icon+'</div><h3>'+s.value+'</h3><p>'+esc(s.label)+'</p><span class="trend '+(s.up?"up":"down")+'">'+(s.up?"↑":"↓")+' '+esc(s.trend)+'</span></div>';
+  }).join("")+'</div>'+
+
+  '<div class="chart-grid">'+
+
+  '<div class="chart-card full"><div class="chart-head"><h3>Platform Growth — Monthly Streams (Millions)</h3><select id="chartPeriod"><option>Last 12 months</option><option>Last 6 months</option><option>Last 30 days</option></select></div><div class="chart-area"><div class="chart-bars">'+months.map(function(m,i){var h=(monthlyStreams[i]/maxStream)*100;return '<div class="chart-bar" style="height:'+h+'%" data-val="'+monthlyStreams[i]+'M"></div>'}).join("")+'</div><div class="chart-labels">'+months.map(function(m){return '<span>'+m+'</span>'}).join("")+'</div></div></div>'+
+
+  '<div class="chart-card"><div class="chart-head"><h3>Top Songs by Streams</h3></div><div style="display:grid;gap:8px">'+topSongs.map(function(s,i){
+    var pct=Math.round((s.streams/topSongs[0].streams)*100);
+    return '<div style="display:flex;align-items:center;gap:12px"><span style="font-size:13px;font-weight:700;color:var(--muted);min-width:20px;text-align:right">'+(i+1)+'</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:600">'+esc(s.title)+'</span><span style="font-size:12px;color:var(--muted)">'+fmt(s.streams)+'</span></div><div style="height:4px;border-radius:4px;background:var(--surface-strong);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--grad);border-radius:4px"></div></div></div></div>';
+  }).join("")+'</div></div>'+
+
+  '<div class="chart-card"><div class="chart-head"><h3>Recent Activity</h3><button class="btn btn-ghost btn-sm" data-nav="activity">View All</button></div><div class="activity-list">'+recentActivityHtml+'</div></div>'+
+
+  '</div>';
+};
+
+/* ---------- ARTISTS ---------- */
+pages.artists=function(){
+  var rows=artists.map(function(a){
+    return '<tr>'+
+      '<td><div class="table-artist-cell"><span class="table-avatar" style="background:'+a.avatar+'">'+esc(initials(a.stageName))+'</span><div><strong>'+esc(a.stageName)+'</strong>'+(a.verified?' <span class="verified">✓</span>':'')+'<br><span style="font-size:12px;color:var(--muted)">'+esc(a.genre)+'</span></div></div></td>'+
+      '<td>'+esc(a.country)+'</td>'+
+      '<td>'+fmt(a.followers)+'</td>'+
+      '<td>'+a.songs+'</td>'+
+      '<td>'+a.albums+'</td>'+
+      '<td>'+fmt(a.streams)+'</td>'+
+      '<td>'+statusBadge(a.status)+'</td>'+
+      '<td>'+esc(a.regDate)+'</td>'+
+      '<td><div class="action-btns">'+
+        '<button class="action-btn" data-action="view" data-id="'+a.id+'" title="View Profile">'+I.eye+'</button>'+
+        '<button class="action-btn" data-action="edit" data-id="'+a.id+'" title="Edit">'+I.edit+'</button>'+
+        '<button class="action-btn" data-action="verify" data-id="'+a.id+'" title="Toggle Verification">'+I.shield+'</button>'+
+        (a.status!=="suspended"?'<button class="action-btn" data-action="suspend" data-id="'+a.id+'" title="Suspend">'+I.ban+'</button>':'<button class="action-btn" data-action="unsuspend" data-id="'+a.id+'" title="Reactivate">'+I.check+'</button>')+
+        '<button class="action-btn del" data-action="delete" data-id="'+a.id+'" title="Delete">'+I.trash+'</button>'+
+      '</div></td></tr>';
+  }).join("");
+
+  return '<div class="table-wrap"><div class="table-head"><h3>All Artists ('+artists.length+')</h3><div class="table-filters"><input class="table-search" placeholder="Search artists..." id="artistSearch"/><select class="filter-select" id="filterGenre"><option value="">All Genres</option>'+GENRES.map(function(g){return '<option>'+g+'</option>'}).join("")+'</select><select class="filter-select" id="filterStatus"><option value="">All Statuses</option>'+STATUSES.map(function(s){return '<option value="'+s+'">'+s.replace(/_/g," ")+'</option>'}).join("")+'</select><select class="filter-select" id="filterCountry"><option value="">All Countries</option>'+COUNTRIES.map(function(c){return '<option>'+c+'</option>'}).join("")+'</select></div></div><div class="table-scroll"><table><thead><tr><th>Artist</th><th>Country</th><th>Followers</th><th>Songs</th><th>Albums</th><th>Streams</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead><tbody id="artistTableBody">'+rows+'</tbody></table></div><div class="table-pagination"><span>Showing '+artists.length+' artists</span><div class="page-btns"><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button></div></div></div>';
+};
+
+/* ---------- APPLICATIONS ---------- */
+pages.applications=function(){
+  var rows=apps.map(function(a){
+    return '<tr>'+
+      '<td><div class="table-artist-cell"><span class="table-avatar" style="background:'+a.avatar+'">'+esc(initials(a.stageName))+'</span><div><strong>'+esc(a.stageName)+'</strong><br><span style="font-size:12px;color:var(--muted)">'+esc(a.genre)+' · '+esc(a.country)+'</span></div></div></td>'+
+      '<td>'+esc(a.email)+'</td>'+
+      '<td>'+esc(a.type)+'</td>'+
+      '<td>'+esc(a.regDate)+'</td>'+
+      '<td>'+statusBadge(a.status)+'</td>'+
+      '<td><div class="action-btns">'+
+        '<button class="btn btn-success btn-sm" data-action="approve_app" data-id="'+a.id+'">Approve</button>'+
+        '<button class="btn btn-ghost btn-sm" data-action="review_app" data-id="'+a.id+'">Review</button>'+
+        '<button class="btn btn-ghost btn-sm" data-action="request_changes" data-id="'+a.id+'">Request Changes</button>'+
+        '<button class="btn btn-danger btn-sm" data-action="reject_app" data-id="'+a.id+'">Reject</button>'+
+      '</div></td></tr>';
+  }).join("");
+
+  return '<div class="table-wrap"><div class="table-head"><h3>Artist Applications ('+apps.length+')</h3><div class="table-filters"><input class="table-search" placeholder="Search applications..." id="appSearch"/><select class="filter-select" id="filterAppStatus"><option value="">All Statuses</option><option value="pending">Pending</option><option value="under_review">Under Review</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div></div><div class="table-scroll"><table><thead><tr><th>Artist</th><th>Email</th><th>Type</th><th>Applied</th><th>Status</th><th>Actions</th></tr></thead><tbody id="appTableBody">'+rows+'</tbody></table></div></div>';
+};
+
+/* ---------- MUSIC LIBRARY ---------- */
+pages.music=function(){
+  var songRows=songs.map(function(s){
+    return '<tr>'+
+      '<td><div class="table-artist-cell"><span class="table-avatar" style="background:var(--grad)">'+I.music+'</span><div><strong>'+esc(s.title)+'</strong><br><span style="font-size:12px;color:var(--muted)">'+esc(s.artist)+' · '+esc(s.album)+'</span></div></div></td>'+
+      '<td>'+esc(s.genre)+'</td>'+
+      '<td>'+fmtDur(s.duration)+'</td>'+
+      '<td>'+fmt(s.streams)+'</td>'+
+      '<td>'+fmt(s.likes)+'</td>'+
+      '<td>'+statusBadge(s.status)+'</td>'+
+      '<td>'+esc(s.uploadDate)+'</td>'+
+      '<td><div class="action-btns">'+
+        '<button class="action-btn" data-action="view_song" data-id="'+s.id+'" title="View">'+I.eye+'</button>'+
+        '<button class="action-btn" data-action="edit_song" data-id="'+s.id+'" title="Edit">'+I.edit+'</button>'+
+        (s.status==="published"?'<button class="action-btn" data-action="unpublish_song" data-id="'+s.id+'" title="Unpublish">↓</button>':'')+
+        (s.status==="pending_review"?'<button class="action-btn" data-action="approve_song" data-id="'+s.id+'" title="Approve" style="color:var(--green)">'+I.check+'</button>':'')+
+      '</div></td></tr>';
+  }).join("");
+
+  var albumRows=albums.map(function(a){
+    return '<tr>'+
+      '<td><div class="table-artist-cell"><span class="table-avatar" style="background:var(--brand)">'+I.music+'</span><div><strong>'+esc(a.title)+'</strong><br><span style="font-size:12px;color:var(--muted)">'+esc(a.artist)+'</span></div></div></td>'+
+      '<td>'+esc(a.genre)+'</td>'+
+      '<td>'+a.tracks+'</td>'+
+      '<td>'+fmt(a.streams)+'</td>'+
+      '<td>'+statusBadge(a.status)+'</td>'+
+      '<td>'+esc(a.released)+'</td>'+
+      '<td><div class="action-btns"><button class="action-btn" title="View">'+I.eye+'</button><button class="action-btn" title="Edit">'+I.edit+'</button></div></td></tr>';
+  }).join("");
+
+  return '<div class="chips" style="margin-bottom:20px"><button class="chip active" data-music-tab="songs">Songs ('+songs.length+')</button><button class="chip" data-music-tab="albums">Albums ('+albums.length+')</button></div>'+
+    '<div id="musicTabSongs"><div class="table-wrap"><div class="table-head"><h3>All Songs</h3><div class="table-filters"><input class="table-search" placeholder="Search songs..." id="songSearch"/></div></div><div class="table-scroll"><table><thead><tr><th>Song</th><th>Genre</th><th>Duration</th><th>Streams</th><th>Likes</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>'+songRows+'</tbody></table></div></div></div>'+
+    '<div id="musicTabAlbums" style="display:none"><div class="table-wrap"><div class="table-head"><h3>All Albums</h3></div><div class="table-scroll"><table><thead><tr><th>Album</th><th>Genre</th><th>Tracks</th><th>Streams</th><th>Status</th><th>Released</th><th>Actions</th></tr></thead><tbody>'+albumRows+'</tbody></table></div></div></div>';
+};
+
+/* ---------- PENDING UPLOADS ---------- */
+pages.uploads=function(){
+  var pending=songs.filter(function(s){return s.status==="pending_review"||s.status==="draft"});
+  var rows=pending.map(function(s){
+    return '<tr>'+
+      '<td><div class="table-artist-cell"><span class="table-avatar" style="background:var(--grad)">'+I.music+'</span><div><strong>'+esc(s.title)+'</strong><br><span style="font-size:12px;color:var(--muted)">'+esc(s.artist)+'</span></div></div></td>'+
+      '<td>'+esc(s.genre)+'</td>'+
+      '<td>'+fmtDur(s.duration)+'</td>'+
+      '<td>'+esc(s.uploadDate)+'</td>'+
+      '<td>'+statusBadge(s.status)+'</td>'+
+      '<td><div class="action-btns">'+
+        '<button class="action-btn" data-action="view_upload" data-id="'+s.id+'" title="Review">'+I.eye+'</button>'+
+        '<button class="action-btn" data-action="approve_upload" data-id="'+s.id+'" title="Approve" style="color:var(--green)">'+I.check+'</button>'+
+        '<button class="action-btn" data-action="reject_upload" data-id="'+s.id+'" title="Reject" style="color:var(--red)">'+I.x+'</button>'+
+      '</div></td></tr>';
+  }).join("");
+
+  return '<div class="table-wrap"><div class="table-head"><h3>Pending Uploads ('+pending.length+')</h3></div><div class="table-scroll"><table><thead><tr><th>Song</th><th>Genre</th><th>Duration</th><th>Uploaded</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
+    (pending.length===0?'<div class="empty">'+I.upload+'<h3>No pending uploads</h3><p>All uploads have been reviewed.</p></div>':'');
+};
+
+/* ---------- FEATURED CONTENT ---------- */
+pages.featured=function(){
+  function artistOpts(){return artists.filter(function(a){return a.status==="approved"}).map(function(a){return '<option value="'+a.id+'"'+(featured.featuredArtist===a.id?' selected':'')+'>'+esc(a.stageName)+'</option>'}).join("")}
+  function songOpts(){return songs.filter(function(s){return s.status==="published"}).map(function(s){return '<option value="'+s.id+'"'+(featured.featuredSong===s.id?' selected':'')+'>'+esc(s.title)+' — '+esc(s.artist)+'</option>'}).join("")}
+  function albumOpts(){return albums.filter(function(a){return a.status==="published"}).map(function(a){return '<option value="'+a.id+'"'+(featured.featuredAlbum===a.id?' selected':'')+'>'+esc(a.title)+' — '+esc(a.artist)+'</option>'}).join("")}
+
+  return '<div class="settings-section"><h3>Featured Artist</h3><div class="form-group"><select id="featArtist">'+artistOpts()+'</select></div></div>'+
+    '<div class="settings-section"><h3>Featured Song</h3><div class="form-group"><select id="featSong">'+songOpts()+'</select></div></div>'+
+    '<div class="settings-section"><h3>Featured Album</h3><div class="form-group"><select id="featAlbum">'+albumOpts()+'</select></div></div>'+
+    '<div class="settings-section"><h3>Trending Songs</h3><div id="trendingList" style="display:grid;gap:8px">'+songs.filter(function(s){return s.status==="published"}).sort(function(a,b){return b.streams-a.streams}).slice(0,10).map(function(s,i){
+      var isTrending=featured.trendingSongs.indexOf(s.id)>-1;
+      return '<div style="display:flex;align-items:center;gap:12px;padding:8px;border-radius:8px;background:var(--surface)"><span style="font-size:13px;font-weight:700;color:var(--muted);min-width:20px">'+(i+1)+'</span><span style="flex:1;font-size:13px">'+esc(s.title)+' — '+esc(s.artist)+'</span><label class="toggle'+(isTrending?" on":"")+'" data-toggle-trending="'+s.id+'"></label></div>';
+    }).join("")+'</div></div>'+
+    '<div class="settings-section"><h3>Genre Spotlight</h3><div class="form-group"><select id="genreSpotlight">'+GENRES.map(function(g){return '<option'+(featured.genreSpotlight===g?' selected':'')+'>'+esc(g)+'</option>'}).join("")+'</select></div></div>'+
+    '<button class="btn btn-primary" id="saveFeatured">Save Featured Content</button>';
+};
+
+/* ---------- REPORTS ---------- */
+pages.reports=function(){
+  var rows=reports.map(function(r){
+    return '<tr>'+
+      '<td>'+statusBadge(r.status)+'</td>'+
+      '<td>'+esc(r.type)+'</td>'+
+      '<td><strong>'+esc(r.target)+'</strong></td>'+
+      '<td>'+esc(r.reporter)+'</td>'+
+      '<td style="max-width:250px">'+esc(r.reason)+'</td>'+
+      '<td>'+esc(r.date)+'</td>'+
+      '<td><div class="action-btns">'+
+        '<button class="action-btn" data-action="review_report" data-id="'+r.id+'" title="Review">'+I.eye+'</button>'+
+        (r.status!=="resolved"?'<button class="action-btn" data-action="resolve_report" data-id="'+r.id+'" title="Resolve" style="color:var(--green)">'+I.check+'</button>':'')+
+        (r.status!=="dismissed"?'<button class="action-btn" data-action="dismiss_report" data-id="'+r.id+'" title="Dismiss">'+I.x+'</button>':'')+
+      '</div></td></tr>';
+  }).join("");
+
+  return '<div class="table-wrap"><div class="table-head"><h3>Reports Center ('+reports.length+')</h3><div class="table-filters"><select class="filter-select" id="filterReportStatus"><option value="">All Statuses</option><option value="new">New</option><option value="under_review">Under Review</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option></select></div></div><div class="table-scroll"><table><thead><tr><th>Status</th><th>Type</th><th>Target</th><th>Reporter</th><th>Reason</th><th>Date</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+};
+
+/* ---------- ACTIVITY LOG ---------- */
+pages.activity=function(){
+  var rows=activity.map(function(a){
+    var colors={approval:"var(--green)",warning:"var(--yellow)",info:"var(--blue)"};
+    return '<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="activity-dot" style="background:'+(colors[a.type]||"var(--muted)")+'"></div><span>'+esc(a.time)+'</span></div></td><td><strong>'+esc(a.action)+'</strong></td><td>'+esc(a.subject)+'</td><td>'+esc(a.admin)+'</td><td>'+statusBadge(a.type==="warning"?"warning":a.type==="approval"?"approved":"info")+'</td></tr>';
+  }).join("");
+
+  return '<div class="table-wrap"><div class="table-head"><h3>Activity Log ('+activity.length+')</h3><div class="table-filters"><input class="table-search" placeholder="Search logs..." id="activitySearch"/></div></div><div class="table-scroll"><table><thead><tr><th>Time</th><th>Action</th><th>Subject</th><th>Admin</th><th>Type</th></tr></thead><tbody id="activityBody">'+rows+'</tbody></table></div><div class="table-pagination"><span>'+activity.length+' entries</span></div></div>';
+};
+
+/* ---------- ANALYTICS ---------- */
+pages.analytics=function(){
+  var totalStreams=songs.reduce(function(s,song){return s+song.streams},0);
+  var published=songs.filter(function(s){return s.status==="published"});
+  var topArtists=artists.slice().sort(function(a,b){return b.streams-a.streams}).slice(0,6);
+  var topGenres={};songs.forEach(function(s){if(!topGenres[s.genre])topGenres[s.genre]=0;topGenres[s.genre]+=s.streams});
+  var genreSorted=Object.keys(topGenres).sort(function(a,b){return topGenres[b]-topGenres[a]});
+  var maxGenre=topGenres[genreSorted[0]]||1;
+
+  var dailyStreams=[4.2,4.5,4.1,4.8,5.2,5.5,5.1,5.8,6.2,6.0,5.7,6.1,6.5,6.3,6.8,7.0,6.9,7.2,7.5,7.1,7.4,7.8,8.0,7.6,7.9,8.2,8.5,8.1,8.4,8.7];
+  var maxDaily=Math.max.apply(null,dailyStreams);
+
+  return '<div class="chart-grid">'+
+    '<div class="chart-card full"><div class="chart-head"><h3>Daily Streams (Millions)</h3><div class="table-filters"><select class="filter-select" id="analyticsPeriod"><option>Last 30 days</option><option>Last 7 days</option><option>Last 90 days</option></select><select class="filter-select"><option>All Artists</option>'+artists.map(function(a){return '<option>'+esc(a.stageName)+'</option>'}).join("")+'</select><select class="filter-select"><option>All Genres</option>'+GENRES.map(function(g){return '<option>'+g+'</option>'}).join("")+'</select></div></div><div class="chart-area"><div class="chart-bars">'+dailyStreams.map(function(v,i){return '<div class="chart-bar" style="height:'+(v/maxDaily*100)+'%;opacity:'+(0.5+i/dailyStreams.length*0.5)+'" data-val="'+v+'M"></div>'}).join("")+'</div><div class="chart-labels"><span>1</span><span>7</span><span>14</span><span>21</span><span>30</span></div></div></div>'+
+
+    '<div class="chart-card"><div class="chart-head"><h3>Top Artists by Streams</h3></div><div style="display:grid;gap:10px">'+topArtists.map(function(a,i){
+      var pct=Math.round((a.streams/topArtists[0].streams)*100);
+      return '<div style="display:flex;align-items:center;gap:10px"><span class="table-avatar" style="background:'+a.avatar+';width:28px;height:28px;font-size:9px">'+esc(initials(a.stageName))+'</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12.5px;font-weight:600">'+esc(a.stageName)+'</span><span style="font-size:11px;color:var(--muted)">'+fmt(a.streams)+'</span></div><div style="height:3px;border-radius:3px;background:var(--surface-strong);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--grad);border-radius:3px"></div></div></div></div>';
+    }).join("")+'</div></div>'+
+
+    '<div class="chart-card"><div class="chart-head"><h3>Genre Distribution</h3></div><div style="display:grid;gap:10px">'+genreSorted.slice(0,6).map(function(g){
+      var pct=Math.round((topGenres[g]/maxGenre)*100);
+      return '<div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12.5px;font-weight:600">'+esc(g)+'</span><span style="font-size:11px;color:var(--muted)">'+fmt(topGenres[g])+' streams</span></div><div style="height:6px;border-radius:3px;background:var(--surface-strong);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--grad);border-radius:3px"></div></div></div>';
+    }).join("")+'</div></div>'+
+
+    '<div class="chart-card full"><div class="chart-head"><h3>Key Metrics</h3></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px">'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">'+fmt(totalStreams)+'</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Total Streams</div></div>'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">3.2min</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Avg Listen Time</div></div>'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">67%</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Engagement Rate</div></div>'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">'+artists.length+'</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Active Artists</div></div>'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">'+published.length+'</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Published Songs</div></div>'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">'+'12.4K'+'</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Monthly Listeners</div></div>'+
+    '</div></div></div>';
+};
+
+/* ---------- REVENUE ---------- */
+pages.revenue=function(){
+  var revStats=[
+    {label:"Platform Revenue",value:"$12.4K",trend:"+18.5%",up:true},
+    {label:"Artist Payouts",value:"$8.68K",trend:"+15.2%",up:true},
+    {label:"Platform Commission",value:"$3.72K",trend:"+22.1%",up:true},
+    {label:"Pending Payouts",value:"$1.45K",trend:"7 artists",up:false},
+    {label:"Subscription Revenue",value:"$9.2K",trend:"+24.3%",up:true},
+    {label:"Ad Revenue",value:"$3.2K",trend:"+8.7%",up:true}
+  ];
+  var monthlyRev=[180,195,210,225,245,260,280,300,315,340,365,390];
+  var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var maxRev=Math.max.apply(null,monthlyRev);
+
+  var payoutRows=artists.filter(function(a){return a.status==="approved"}).map(function(a){
+    var earnings=Math.round(a.streams*0.004);
+    return '<tr><td><div class="table-artist-cell"><span class="table-avatar" style="background:'+a.avatar+'">'+esc(initials(a.stageName))+'</span><span>'+esc(a.stageName)+'</span></div></td><td>'+fmt(a.streams)+'</td><td><strong>$'+fmt(earnings)+'</strong></td><td>'+statusBadge("published")+'</td></tr>';
+  }).join("");
+
+  return '<div class="stat-grid">'+revStats.map(function(s){
+    return '<div class="stat-card"><h3>'+s.value+'</h3><p>'+esc(s.label)+'</p><span class="trend '+(s.up?"up":"down")+'">'+(s.up?"↑":"↓")+' '+esc(s.trend)+'</span></div>';
+  }).join("")+'</div>'+
+
+  '<div class="chart-card full" style="margin-bottom:24px"><div class="chart-head"><h3>Monthly Revenue ($K)</h3></div><div class="chart-area"><div class="chart-bars">'+months.map(function(m,i){var h=(monthlyRev[i]/maxRev)*100;return '<div class="chart-bar" style="height:'+h+'%" data-val="$'+monthlyRev[i]+'K"></div>'}).join("")+'</div><div class="chart-labels">'+months.map(function(m){return '<span>'+m+'</span>'}).join("")+'</div></div></div>'+
+
+  '<div class="table-wrap"><div class="table-head"><h3>Artist Earnings</h3><span class="badge badge-gray">Payments on hold — system ready</span></div><div class="table-scroll"><table><thead><tr><th>Artist</th><th>Total Streams</th><th>Estimated Earnings</th><th>Status</th></tr></thead><tbody>'+payoutRows+'</tbody></table></div></div>';
+};
+
+/* ---------- ADMIN ROLES ---------- */
+pages.admins=function(){
+  var rows=admins.map(function(a){
+    return '<tr>'+
+      '<td><div class="table-artist-cell"><span class="table-avatar" style="background:var(--grad)">'+esc(initials(a.name))+'</span><div><strong>'+esc(a.name)+'</strong><br><span style="font-size:12px;color:var(--muted)">'+esc(a.email)+'</span></div></div></td>'+
+      '<td>'+roleBadge(a.role)+'</td>'+
+      '<td>'+statusBadge(a.status==="active"?"approved":"suspended")+'</td>'+
+      '<td>'+esc(a.lastLogin)+'</td>'+
+      '<td><div class="action-btns">'+
+        '<button class="action-btn" data-action="edit_admin" data-id="'+a.id+'" title="Edit">'+I.edit+'</button>'+
+        (a.role!=="super_admin"?'<button class="action-btn" data-action="toggle_admin" data-id="'+a.id+'" title="Toggle Status">'+I.ban+'</button>':'')+
+      '</div></td></tr>';
+  }).join("");
+
+  return '<div class="table-wrap"><div class="table-head"><h3>Admin Accounts ('+admins.length+')</h3><button class="btn btn-primary btn-sm" id="addAdminBtn">+ Add Admin</button></div><div class="table-scroll"><table><thead><tr><th>Admin</th><th>Role</th><th>Status</th><th>Last Login</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
+  '<div class="settings-section"><h3>Role Permissions</h3>'+
+  '<div style="display:grid;gap:12px;margin-top:12px">'+
+    '<div style="padding:14px;border-radius:10px;background:var(--surface)"><strong style="color:var(--brand)">Super Admin</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">Full system access — manage all artists, content, users, settings, and administrator accounts</p></div>'+
+    '<div style="padding:14px;border-radius:10px;background:var(--surface)"><strong style="color:var(--blue)">Content Admin</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">Manage songs, albums, playlists, featured content, and content moderation</p></div>'+
+    '<div style="padding:14px;border-radius:10px;background:var(--surface)"><strong style="color:var(--green)">Artist Manager</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">Manage artist registrations, profiles, approvals, and verification</p></div>'+
+    '<div style="padding:14px;border-radius:10px;background:var(--surface)"><strong style="color:var(--yellow)">Analytics Admin</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">Access analytics, reports, and platform-wide data insights</p></div>'+
+    '<div style="padding:14px;border-radius:10px;background:var(--surface)"><strong style="color:var(--red)">Finance Admin</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">Manage revenue, payouts, payment history, and financial reports</p></div>'+
+  '</div></div>';
+};
+
+/* ---------- NOTIFICATIONS ---------- */
+pages.notifications=function(){
+  return '<div style="display:grid;gap:8px">'+notifications.map(function(n){
+    var colors={info:"var(--blue)",warning:"var(--yellow)",success:"var(--green)"};
+    return '<div class="notif-item'+(n.read?"":" unread")+'"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><div class="activity-dot" style="background:'+(colors[n.type]||"var(--muted)")+'"></div><h4>'+esc(n.title)+'</h4></div><p>'+esc(n.message)+'</p><div class="notif-time">'+esc(n.time)+'</div></div>';
+  }).join("")+'</div>'+
+  '<div style="margin-top:16px"><button class="btn btn-ghost" id="markAllRead">Mark all as read</button></div>';
+};
+
+/* ---------- SETTINGS ---------- */
+pages.settings=function(){
+  return '<div class="settings-section"><h3>Platform Settings</h3>'+
+    '<div class="setting-row"><div><div class="setting-label">Platform Name</div><div class="setting-desc">Display name across the platform</div></div><input style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;width:200px" value="'+esc(settings.platformName)+'" id="settName"/></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Maintenance Mode</div><div class="setting-desc">Temporarily disable public access</div></div><label class="toggle'+(settings.maintenanceMode?" on":"")+'" id="toggleMaintenance"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Allow Registrations</div><div class="setting-desc">Enable new user sign-ups</div></div><label class="toggle'+(settings.registrations?" on":"")+'" id="toggleRegistrations"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Upload Size Limit</div><div class="setting-desc">Maximum file size in MB</div></div><input type="number" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;width:100px" value="'+settings.uploadLimitMB+'" id="settUploadLimit"/></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Audio Formats</div><div class="setting-desc">Accepted upload formats</div></div><span style="font-size:13px;color:var(--muted)">'+settings.audioFormats.join(", ").toUpperCase()+'</span></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Max Bio Length</div><div class="setting-desc">Character limit for artist biographies</div></div><input type="number" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;width:100px" value="'+settings.maxBioLength+'" id="settBioMax"/></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Copyright Claim Email</div><div class="setting-desc">Email for copyright reports</div></div><input style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;width:260px" value="'+esc(settings.copyrightClaimEmail)+'" id="settCopyrightEmail"/></div>'+
+  '</div>'+
+  '<div class="settings-section"><h3>Notification Settings</h3>'+
+    '<div class="setting-row"><div><div class="setting-label">New Artist Registration Alerts</div></div><label class="toggle on"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Upload Pending Alerts</div></div><label class="toggle on"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Copyright Report Alerts</div></div><label class="toggle on"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">High-Performer Alerts</div></div><label class="toggle on"></label></div>'+
+  '</div>'+
+  '<div class="settings-section"><h3>Privacy & Terms</h3>'+
+    '<div class="setting-row"><div><div class="setting-label">Privacy Policy</div><div class="setting-desc">Last updated: August 1, 2025</div></div><button class="btn btn-ghost btn-sm">Edit</button></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Terms & Conditions</div><div class="setting-desc">Last updated: July 15, 2025</div></div><button class="btn btn-ghost btn-sm">Edit</button></div>'+
+  '</div>'+
+  '<button class="btn btn-primary" id="saveSettings">Save Settings</button>';
+};
+
+/* ===== PAGE EVENT BINDING ===== */
+function bindPageEvents(){
+  // Artist table actions
+  $$("[data-action]").forEach(function(btn){
+    btn.addEventListener("click",function(e){
+      e.stopPropagation();
+      var action=btn.dataset.action;
+      var id=btn.dataset.id;
+      handleAction(action,id);
+    });
+  });
+
+  // Music tabs
+  $$("[data-music-tab]").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      $$("[data-music-tab]").forEach(function(b){b.classList.remove("active")});
+      btn.classList.add("active");
+      var tab=btn.dataset.musicTab;
+      var songsTab=$("#musicTabSongs");
+      var albumsTab=$("#musicTabAlbums");
+      if(tab==="songs"){songsTab.style.display="";albumsTab.style.display="none"}
+      else{songsTab.style.display="none";albumsTab.style.display=""}
+    });
+  });
+
+  // Featured content save
+  var saveFeatBtn=$("#saveFeatured");
+  if(saveFeatBtn){
+    saveFeatBtn.addEventListener("click",function(){
+      var fa=$("#featArtist");
+      var fs=$("#featSong");
+      var fal=$("#featAlbum");
+      var gs=$("#genreSpotlight");
+      if(fa)featured.featuredArtist=fa.value;
+      if(fs)featured.featuredSong=fs.value;
+      if(fal)featured.featuredAlbum=fal.value;
+      if(gs)featured.genreSpotlight=gs.value;
+      persist();
+      showToast("Featured content updated successfully");
+    });
+  }
+
+  // Settings save
+  var saveSettBtn=$("#saveSettings");
+  if(saveSettBtn){
+    saveSettBtn.addEventListener("click",function(){
+      var name=$("#settName");
+      var limit=$("#settUploadLimit");
+      var bioMax=$("#settBioMax");
+      var email=$("#settCopyrightEmail");
+      if(name)settings.platformName=name.value;
+      if(limit)settings.uploadLimitMB=parseInt(limit.value)||50;
+      if(bioMax)settings.maxBioLength=parseInt(bioMax.value)||2000;
+      if(email)settings.copyrightClaimEmail=email.value;
+      persist();
+      showToast("Settings saved successfully");
+    });
+  }
+
+  // Toggle maintenance
+  var toggleMaint=$("#toggleMaintenance");
+  if(toggleMaint){
+    toggleMaint.addEventListener("click",function(){
+      settings.maintenanceMode=!settings.maintenanceMode;
+      toggleMaint.classList.toggle("on",settings.maintenanceMode);
+      persist();
+      showToast(settings.maintenanceMode?"Maintenance mode enabled":"Maintenance mode disabled");
+    });
+  }
+  var toggleReg=$("#toggleRegistrations");
+  if(toggleReg){
+    toggleReg.addEventListener("click",function(){
+      settings.registrations=!settings.registrations;
+      toggleReg.classList.toggle("on",settings.registrations);
+      persist();
+      showToast(settings.registrations?"Registrations enabled":"Registrations disabled");
+    });
+  }
+
+  // Trending toggles
+  $$("[data-toggle-trending]").forEach(function(tog){
+    tog.addEventListener("click",function(){
+      var sid=tog.dataset.toggleTrending;
+      var idx=featured.trendingSongs.indexOf(sid);
+      if(idx>-1)featured.trendingSongs.splice(idx,1);
+      else if(featured.trendingSongs.length<10)featured.trendingSongs.push(sid);
+      tog.classList.toggle("on",featured.trendingSongs.indexOf(sid)>-1);
+      persist();
+    });
+  });
+
+  // Mark all notifications read
+  var markAllBtn=$("#markAllRead");
+  if(markAllBtn){
+    markAllBtn.addEventListener("click",function(){
+      notifications.forEach(function(n){n.read=true});
+      persist();
+      renderPage();
+      showToast("All notifications marked as read");
+    });
+  }
+
+  // Add admin
+  var addAdminBtn=$("#addAdminBtn");
+  if(addAdminBtn){
+    addAdminBtn.addEventListener("click",function(){
+      openModal('<div class="modal-head"><h2>Add Administrator</h2><button class="modal-close" onclick="document.getElementById(\'modalBg\').classList.remove(\'open\')">'+I.x+'</button></div>'+
+        '<div class="form-group"><label>Name</label><input id="newAdminName" placeholder="Full name"/></div>'+
+        '<div class="form-group"><label>Email</label><input id="newAdminEmail" type="email" placeholder="Email address"/></div>'+
+        '<div class="form-group"><label>Role</label><select id="newAdminRole"><option value="content_admin">Content Admin</option><option value="artist_manager">Artist Manager</option><option value="analytics_admin">Analytics Admin</option><option value="finance_admin">Finance Admin</option></select></div>'+
+        '<button class="btn btn-primary" onclick="window._addAdmin()">Create Account</button>');
+    });
+  }
+
+  // Artist search — only bind once
+  if(!window._searchBound){
+    var artistSearch=$("#artistSearch");
+    if(artistSearch){
+      artistSearch.addEventListener("input",function(){
+        filterArtistTable();
+      });
+    }
+    // Filter selects — only bind once
+    ["filterGenre","filterStatus","filterCountry","filterAppStatus","filterReportStatus"].forEach(function(id){
+      var el=$("#"+id);
+      if(el)el.addEventListener("change",function(){
+        if(id==="filterGenre"||id==="filterStatus"||id==="filterCountry")filterArtistTable();
+      });
+    });
+    window._searchBound=true;
+  }
+
+  // Nav links in content
+  $$("[data-nav]").forEach(function(btn){
+    btn.addEventListener("click",function(){setPage(btn.dataset.nav)});
+  });
+}
+
+window._addAdmin=function(){
+  var name=($("#newAdminName")||{}).value;
+  var email=($("#newAdminEmail")||{}).value;
+  var role=($("#newAdminRole")||{}).value;
+  if(!name||!email){showToast("Please fill in all fields");return}
+  admins.push({id:genId(),name:name,email:email,role:role||"content_admin",status:"active",lastLogin:"Never"});
+  persist();
+  closeModal();
+  renderPage();
+  showToast("Admin account created for "+name);
+  addActivity("Admin account created",name,"Super Admin","approval");
+};
+
+function filterArtistTable(){
+  var search=(($("#artistSearch")||{}).value||"").toLowerCase();
+  var genre=($("#filterGenre")||{}).value||"";
+  var status=($("#filterStatus")||{}).value||"";
+  var country= ($("#filterCountry")||{}).value||"";
+  var rows=$$("#artistTableBody tr");
+  // re-render with filter
+  var filtered=artists.filter(function(a){
+    if(search && a.stageName.toLowerCase().indexOf(search)===-1 && a.email.toLowerCase().indexOf(search)===-1)return false;
+    if(genre && a.genre!==genre)return false;
+    if(status && a.status!==status)return false;
+    if(country && a.country!==country)return false;
+    return true;
+  });
+  var tbody=$("#artistTableBody");
+  if(tbody){
+    tbody.innerHTML=filtered.map(function(a){
+      return '<tr>'+
+        '<td><div class="table-artist-cell"><span class="table-avatar" style="background:'+a.avatar+'">'+esc(initials(a.stageName))+'</span><div><strong>'+esc(a.stageName)+'</strong>'+(a.verified?' <span class="verified">✓</span>':'')+'<br><span style="font-size:12px;color:var(--muted)">'+esc(a.genre)+'</span></div></div></td>'+
+        '<td>'+esc(a.country)+'</td><td>'+fmt(a.followers)+'</td><td>'+a.songs+'</td><td>'+a.albums+'</td><td>'+fmt(a.streams)+'</td><td>'+statusBadge(a.status)+'</td><td>'+esc(a.regDate)+'</td>'+
+        '<td><div class="action-btns"><button class="action-btn" data-action="view" data-id="'+a.id+'" title="View Profile">'+I.eye+'</button><button class="action-btn" data-action="edit" data-id="'+a.id+'" title="Edit">'+I.edit+'</button><button class="action-btn" data-action="verify" data-id="'+a.id+'" title="Verify">'+I.shield+'</button><button class="action-btn" data-action="suspend" data-id="'+a.id+'" title="Suspend">'+I.ban+'</button><button class="action-btn del" data-action="delete" data-id="'+a.id+'" title="Delete">'+I.trash+'</button></div></td></tr>';
+    }).join("");
+    bindPageEvents();
+  }
+}
+
+/* ===== ACTIONS ===== */
+function handleAction(action,id){
+  switch(action){
+    case"view":case"view_song":case"view_upload":
+      var artist=artists.filter(function(a){return a.id===id})[0];
+      var song=songs.filter(function(s){return s.id===id})[0];
+      if(artist){
+        openModal('<div class="modal-head"><h2>'+esc(artist.stageName)+'</h2><button class="modal-close" onclick="document.getElementById(\'modalBg\').classList.remove(\'open\')">'+I.x+'</button></div>'+
+          '<div style="display:flex;gap:16px;align-items:center;margin-bottom:20px"><div style="width:80px;height:80px;border-radius:50%;background:'+artist.avatar+';display:grid;place-items:center;font-size:24px;font-weight:700">'+esc(initials(artist.stageName))+'</div><div><div style="font-size:18px;font-weight:700">'+esc(artist.stageName)+(artist.verified?' <span class="verified">✓ Verified</span>':'')+'</div><div style="color:var(--muted);font-size:13px">'+esc(artist.genre)+' · '+esc(artist.country)+' · '+esc(artist.type)+'</div></div></div>'+
+          '<p style="color:var(--muted);font-size:13.5px;line-height:1.6;margin-bottom:20px">'+esc(artist.bio)+'</p>'+
+          '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">'+
+            '<div style="text-align:center;padding:12px;background:var(--surface);border-radius:10px"><div style="font-size:20px;font-weight:700">'+fmt(artist.followers)+'</div><div style="font-size:11px;color:var(--muted)">Followers</div></div>'+
+            '<div style="text-align:center;padding:12px;background:var(--surface);border-radius:10px"><div style="font-size:20px;font-weight:700">'+artist.songs+'</div><div style="font-size:11px;color:var(--muted)">Songs</div></div>'+
+            '<div style="text-align:center;padding:12px;background:var(--surface);border-radius:10px"><div style="font-size:20px;font-weight:700">'+artist.albums+'</div><div style="font-size:11px;color:var(--muted)">Albums</div></div>'+
+            '<div style="text-align:center;padding:12px;background:var(--surface);border-radius:10px"><div style="font-size:20px;font-weight:700">'+fmt(artist.streams)+'</div><div style="font-size:11px;color:var(--muted)">Streams</div></div>'+
+          '</div>'+
+          '<div style="font-size:12px;color:var(--muted)"><strong>Email:</strong> '+esc(artist.email)+' · <strong>Label:</strong> '+esc(artist.label||"Independent")+' · <strong>Registered:</strong> '+esc(artist.regDate)+'</div>');
+      }
+      break;
+    case"edit":case"edit_song":case"edit_admin":
+      showToast("Edit mode opened — changes will be saved");
+      break;
+    case"verify":
+      var ar=artists.filter(function(a){return a.id===id})[0];
+      if(ar){ar.verified=!ar.verified;persist();renderPage();showToast(ar.stageName+(ar.verified?" verified":" verification removed"));addActivity("Artist verification toggled",ar.stageName,"Super Admin","approval")}
+      break;
+    case"suspend":
+      var ar2=artists.filter(function(a){return a.id===id})[0];
+      if(ar2){ar2.status="suspended";persist();renderPage();showToast(ar2.stageName+" suspended");addActivity("Artist suspended",ar2.stageName,"Super Admin","warning")}
+      break;
+    case"unsuspend":
+      var ar3=artists.filter(function(a){return a.id===id})[0];
+      if(ar3){ar3.status="approved";persist();renderPage();showToast(ar3.stageName+" reactivated");addActivity("Artist reactivated",ar3.stageName,"Super Admin","approval")}
+      break;
+    case"delete":
+      if(confirm("Are you sure you want to delete this artist?")){
+        artists=artists.filter(function(a){return a.id!==id});persist();renderPage();showToast("Artist deleted");
+      }
+      break;
+    case"approve_app":
+      var app=apps.filter(function(a){return a.id===id})[0];
+      if(app){
+        var colors=["linear-gradient(135deg,#a855f7,#ec4899)","linear-gradient(135deg,#60a5fa,#a78bfa)","linear-gradient(135deg,#34d399,#60a5fa)","linear-gradient(135deg,#fbbf24,#f97316)"];
+        artists.push({id:genId(),stageName:app.stageName,legalName:app.stageName,email:app.email,phone:app.phone,country:app.country,location:app.location,type:app.type,genre:app.genre,bio:app.bio,verified:false,status:"approved",followers:0,songs:0,albums:0,streams:0,regDate:app.regDate,avatar:colors[Math.floor(Math.random()*colors.length)],socials:{},label:"Independent"});
+        apps=apps.filter(function(a){return a.id!==id});persist();renderPage();showToast(app.stageName+" approved and added as artist");
+        addActivity("Artist application approved",app.stageName,"Super Admin","approval");
+      }
+      break;
+    case"review_app":
+      showToast("Application review opened");
+      break;
+    case"request_changes":
+      showToast("Changes request sent to applicant");
+      addActivity("Changes requested",apps.filter(function(a){return a.id===id})[0].stageName,"Super Admin","warning");
+      break;
+    case"reject_app":
+      var rejApp=apps.filter(function(a){return a.id===id})[0];
+      if(rejApp){
+        openModal('<div class="modal-head"><h2>Reject Application</h2><button class="modal-close" onclick="document.getElementById(\'modalBg\').classList.remove(\'open\')">'+I.x+'</button></div>'+
+          '<p style="color:var(--muted);margin-bottom:14px">Provide a reason for rejecting <strong>'+esc(rejApp.stageName)+'</strong>\'s application:</p>'+
+          '<div class="form-group"><textarea id="rejectReason" placeholder="Reason for rejection..."></textarea></div>'+
+          '<div style="display:flex;gap:10px"><button class="btn btn-danger" onclick="window._confirmReject(\''+id+'\')">Confirm Rejection</button><button class="btn btn-ghost" onclick="document.getElementById(\'modalBg\').classList.remove(\'open\')">Cancel</button></div>');
+      }
+      break;
+    case"approve_upload":
+      var song=songs.filter(function(s){return s.id===id})[0];
+      if(song){song.status="published";persist();renderPage();showToast(song.title+" approved and published");addActivity("Song approved",song.title,song.artist,"approval")}
+      break;
+    case"reject_upload":
+      showToast("Upload rejected — artist notified");
+      break;
+    case"unpublish_song":
+      var pubSong=songs.filter(function(s){return s.id===id})[0];
+      if(pubSong){pubSong.status="pending_review";persist();renderPage();showToast(pubSong.title+" unpublished")}
+      break;
+    case"resolve_report":
+      var rep=reports.filter(function(r){return r.id===id})[0];
+      if(rep){rep.status="resolved";persist();renderPage();showToast("Report resolved");addActivity("Report resolved",rep.target,"Super Admin","approval")}
+      break;
+    case"dismiss_report":
+      var disRep=reports.filter(function(r){return r.id===id})[0];
+      if(disRep){disRep.status="dismissed";persist();renderPage();showToast("Report dismissed")}
+      break;
+    case"toggle_admin":
+      var adm=admins.filter(function(a){return a.id===id})[0];
+      if(adm){adm.status=adm.status==="active"?"inactive":"active";persist();renderPage();showToast(adm.name+(adm.status==="active"?" activated":" deactivated"))}
+      break;
+    case"review_report":
+      showToast("Report details opened for review");
+      break;
+  }
+}
+
+window._confirmReject=function(id){
+  var reason=(($("#rejectReason")||{}).value||"No reason provided");
+  var app=apps.filter(function(a){return a.id===id})[0];
+  if(app){app.status="rejected";persist();closeModal();renderPage();showToast(app.stageName+" application rejected");addActivity("Artist application rejected",app.stageName,"Super Admin","warning")}
+};
+
+/* ===== MODAL ===== */
+function openModal(html){
+  $("#modal").innerHTML=html;
+  $("#modalBg").classList.add("open");
+}
+function closeModal(){
+  $("#modalBg").classList.remove("open");
+}
+$("#modalBg").addEventListener("click",function(e){if(e.target===this)closeModal()});
+
+/* ===== NOTIFICATIONS PANEL ===== */
+function renderNotifPanel(){
+  var html=notifications.map(function(n){
+    var colors={info:"var(--blue)",warning:"var(--yellow)",success:"var(--green)"};
+    return '<div class="notif-item'+(n.read?"":" unread")+'"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><div class="activity-dot" style="background:'+(colors[n.type]||"var(--muted)")+'"></div><h4>'+esc(n.title)+'</h4></div><p>'+esc(n.message)+'</p><div class="notif-time">'+esc(n.time)+'</div></div>';
+  }).join("");
+  $("#notifList").innerHTML=html||'<div class="empty"><h3>No notifications</h3></div>';
+}
+$("#notifToggle").addEventListener("click",function(){
+  $("#notifPanel").classList.toggle("open");
+  renderNotifPanel();
+});
+$("#closeNotif").addEventListener("click",function(){$("#notifPanel").classList.remove("open")});
+
+/* ===== SIDEBAR NAV ===== */
+$$(".nav-item").forEach(function(btn){
+  btn.addEventListener("click",function(){setPage(btn.dataset.page)});
+});
+
+/* ===== MOBILE ===== */
+$("#hamburger").addEventListener("click",function(){$("#sidebar").classList.toggle("open");$("#scrim").classList.toggle("show")});
+$("#scrim").addEventListener("click",function(){$("#sidebar").classList.remove("open");$("#scrim").classList.remove("show")});
+
+/* ===== GLOBAL SEARCH ===== */
+var gSearchTimer=null;
+$("#globalSearch").addEventListener("input",function(){
+  clearTimeout(gSearchTimer);
+  var q=this.value.toLowerCase();
+  gSearchTimer=setTimeout(function(){
+    if(q.indexOf("artist")>-1||q.indexOf("artist")>-1)setPage("artists");
+    else if(q.indexOf("upload")>-1)setPage("uploads");
+    else if(q.indexOf("report")>-1)setPage("reports");
+    else if(q.indexOf("setting")>-1)setPage("settings");
+    else if(q.indexOf("analytic")>-1)setPage("analytics");
+    else if(q.indexOf("revenue")>-1||q.indexOf("earning")>-1)setPage("revenue");
+    else if(q.indexOf("application")>-1||q.indexOf("applic")>-1)setPage("applications");
+    else if(q.indexOf("music")>-1||q.indexOf("song")>-1||q.indexOf("album")>-1)setPage("music");
+  },300);
+});
+
+/* ===== BOOT ===== */
+renderPage();
+
+})();
+</script>
+</body>
+</html>

@@ -493,6 +493,10 @@
 
     <div class="side-foot">
       <p>Streaming on OneBEAT · <strong style="color:var(--accent)">V2.1.1 LTS BETA</strong></p>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <a href="register.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;background:rgba(168,85,247,.12);color:#a855f7;font-size:11px;font-weight:600;transition:all .2s;text-decoration:none">🎵 Artist Portal</a>
+        <a href="admin.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.05);color:var(--muted);font-size:11px;font-weight:600;transition:all .2s;text-decoration:none">⚙ Admin</a>
+      </div>
     </div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -509,6 +513,7 @@
           <input type="search" id="searchInput" placeholder="Search songs, artists, playlists…" aria-label="Search" />
         </div>
         <div class="topbar-right">
+          <a href="index.html" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;color:var(--muted);font-size:12px;font-weight:600;text-decoration:none;transition:all .2s">Home</a>
           <button class="upgrade-btn" id="upgradeBtn">Go Premium</button>
           <button class="user-chip" id="userChip" aria-label="Account">
             <span class="user-avatar">LK</span><span>Laker</span>
@@ -605,13 +610,13 @@
   ];
 
   var ARTISTS = [
-    { name: "Kira Solace",      initials: "KS", listeners: "12.4M", genre: "Alt Pop",    color: "linear-gradient(135deg,#2ee57c,#16d1a0)" },
-    { name: "DJ Kavana",        initials: "DK", listeners: "9.8M",  genre: "Afro House", color: "linear-gradient(135deg,#0ea5e9,#16d1a0)" },
-    { name: "The Velvet Echo",  initials: "VE", listeners: "7.2M",  genre: "Indie Rock", color: "linear-gradient(135deg,#8b5cf6,#34d399)" },
-    { name: "Lena Marr",        initials: "LM", listeners: "6.5M",  genre: "R&B",        color: "linear-gradient(135deg,#ec4899,#10b981)" },
-    { name: "Aya Blaze",        initials: "AB", listeners: "5.9M",  genre: "Amapiano",   color: "linear-gradient(135deg,#f59e0b,#2ee57c)" },
-    { name: "Zephyr",           initials: "ZE", listeners: "4.3M",  genre: "Electronic", color: "linear-gradient(135deg,#f43f5e,#4ade80)" },
-    { name: "Nova Rayne",       initials: "NR", listeners: "3.8M",  genre: "Pop",        color: "linear-gradient(135deg,#22d3ee,#16d1a0)" }
+    { name: "Kira Solace",      initials: "KS", listeners: "34.8K", genre: "Alt Pop",    color: "linear-gradient(135deg,#2ee57c,#16d1a0)" },
+    { name: "DJ Kavana",        initials: "DK", listeners: "28.1K", genre: "Afro House", color: "linear-gradient(135deg,#0ea5e9,#16d1a0)" },
+    { name: "The Velvet Echo",  initials: "VE", listeners: "18.4K", genre: "Indie Rock", color: "linear-gradient(135deg,#8b5cf6,#34d399)" },
+    { name: "Lena Marr",        initials: "LM", listeners: "14.2K", genre: "R&B",        color: "linear-gradient(135deg,#ec4899,#10b981)" },
+    { name: "Aya Blaze",        initials: "AB", listeners: "12.1K", genre: "Amapiano",   color: "linear-gradient(135deg,#f59e0b,#2ee57c)" },
+    { name: "Zephyr",           initials: "ZE", listeners: "8.7K",  genre: "Electronic", color: "linear-gradient(135deg,#f43f5e,#4ade80)" },
+    { name: "Nova Rayne",       initials: "NR", listeners: "6.3K",  genre: "Pop",        color: "linear-gradient(135deg,#22d3ee,#16d1a0)" }
   ];
 
   var GENRES = ["All", "Alt Pop", "Afro House", "Amapiano", "Electronic", "Indie Rock", "Lo-Fi", "Pop", "R&B", "Soul", "Afrobeat"];

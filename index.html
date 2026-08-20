@@ -580,7 +580,7 @@
 <!-- ============ NAV ============ -->
 <header class="nav" id="nav">
   <div class="container nav-inner">
-    <a href="#top" class="brand" aria-label="OneBEAT home">
+    <a href="index.html" class="brand" aria-label="OneBEAT home">
       <span class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9.5v13M12 13l11-3.5v13"/></svg>
       </span>
@@ -596,8 +596,9 @@
       </ul>
     </nav>
     <div class="nav-cta">
-      <a href="#" class="signin">Sign in</a>
-      <a href="app.html" class="btn btn-primary btn-sm">Get the app</a>
+      <a href="register.html" class="signin" style="color:var(--brand)">Register as Artist</a>
+      <a href="app.html" class="signin">Listen</a>
+      <a href="#cta" class="btn btn-primary btn-sm">Get the app</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -611,7 +612,10 @@
   <a href="#artists">Artists</a>
   <a href="#pricing">Pricing</a>
   <a href="#feedback">Feedback</a>
-  <a href="app.html" class="btn btn-primary">Get the app</a>
+  <a href="app.html">Listen Now</a>
+  <a href="register.html" style="color:var(--brand)">Register as Artist</a>
+  <a href="admin.html">Admin</a>
+  <a href="#cta" class="btn btn-primary">Get the app</a>
 </div>
 
 <main id="top">
@@ -622,19 +626,20 @@
     <div class="hero-grid"></div>
     <div class="container hero-inner">
       <div class="hero-copy">
-        <span class="badge reveal"><span class="pulse-dot"></span> Now streaming worldwide — 180+ countries</span>
+        <span class="badge reveal"><span class="pulse-dot"></span> Now streaming — growing every day</span>
         <h1 class="reveal" data-delay="1">
           <span class="block">Every beat.</span>
           <span class="block gradient-text">One place.</span>
         </h1>
         <p class="lede reveal" data-delay="2">Stream millions of songs in crystal-clear audio, discover artists before the world does, and build playlists that feel like they were made just for you.</p>
         <div class="hero-actions reveal" data-delay="3">
-          <a href="#pricing" class="btn btn-primary">
+          <a href="app.html" class="btn btn-primary">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72c0 .93 1 1.5 1.8 1.03l11.1-6.86c.77-.47.77-1.58 0-2.06L9.8 4.1C9 3.64 8 4.2 8 5.14Z"/></svg>
             Start listening — it’s free
           </a>
-          <a href="#trending" class="btn btn-ghost">Explore charts
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <a href="register.html" class="btn btn-ghost" style="border-color:rgba(168,85,247,.4);color:var(--brand)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Register as an Artist
           </a>
         </div>
         <div class="hero-proof reveal" data-delay="4">
@@ -647,7 +652,7 @@
           </div>
           <div>
             <p class="stars" aria-label="4.9 out of 5 stars">★★★★★</p>
-            <p><strong>4.9/5</strong> from 2M+ reviews · Loved by <strong>40M+ listeners</strong></p>
+            <p><strong>4.8/5</strong> from <strong>12K+ listeners</strong> · and growing</p>
           </div>
         </div>
       </div>
@@ -692,7 +697,7 @@
         </div>
         <div class="float-chip chip-b">
           <span class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 22v-4M4.9 4.9 7.7 7.7M19.1 4.9l-2.8 2.8M2 12h4M22 12h-4M4.9 19.1l2.8-2.8M19.1 19.1l-2.8-2.8"/></svg></span>
-          <span>12,482,913 plays<small>and counting</small></span>
+          <span>2,847,210 plays<small>and counting</small></span>
         </div>
       </div>
     </div>
@@ -778,8 +783,7 @@
         <article class="artist-card reveal">
           <div class="artist-avatar" style="background:linear-gradient(135deg,#7c3aed,#db2777)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div>
-            <h3>Kira Solace</h3>
-            <p class="followers">12.4M followers</p>
+            <h3>Kira Solace</h3>             <p class="followers">84K followers</p>
             <span class="genre-tag">Alt Pop</span>
           </div>
           <button class="follow-btn" data-followed="false" aria-label="Follow Kira Solace">Follow</button>
@@ -787,8 +791,7 @@
         <article class="artist-card reveal" data-delay="1">
           <div class="artist-avatar" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div>
-            <h3>DJ Kavana</h3>
-            <p class="followers">9.8M followers</p>
+            <h3>DJ Kavana</h3>             <p class="followers">62K followers</p>
             <span class="genre-tag">Afro House</span>
           </div>
           <button class="follow-btn" data-followed="false" aria-label="Follow DJ Kavana">Follow</button>
@@ -796,8 +799,7 @@
         <article class="artist-card reveal" data-delay="2">
           <div class="artist-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div>
-            <h3>The Velvet Echo</h3>
-            <p class="followers">7.2M followers</p>
+            <h3>The Velvet Echo</h3>             <p class="followers">47K followers</p>
             <span class="genre-tag">Indie Rock</span>
           </div>
           <button class="follow-btn" data-followed="false" aria-label="Follow The Velvet Echo">Follow</button>
@@ -805,8 +807,7 @@
         <article class="artist-card reveal">
           <div class="artist-avatar" style="background:linear-gradient(135deg,#10b981,#0ea5e9)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div>
-            <h3>Lena Marr</h3>
-            <p class="followers">6.5M followers</p>
+            <h3>Lena Marr</h3>             <p class="followers">38K followers</p>
             <span class="genre-tag">R&amp;B</span>
           </div>
           <button class="follow-btn" data-followed="false" aria-label="Follow Lena Marr">Follow</button>
@@ -814,8 +815,7 @@
         <article class="artist-card reveal" data-delay="1">
           <div class="artist-avatar" style="background:linear-gradient(135deg,#f472b6,#a855f7)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div>
-            <h3>Aya Blaze</h3>
-            <p class="followers">5.9M followers</p>
+            <h3>Aya Blaze</h3>             <p class="followers">31K followers</p>
             <span class="genre-tag">Amapiano</span>
           </div>
           <button class="follow-btn" data-followed="false" aria-label="Follow Aya Blaze">Follow</button>
@@ -823,8 +823,7 @@
         <article class="artist-card reveal" data-delay="2">
           <div class="artist-avatar" style="background:linear-gradient(135deg,#8b5cf6,#06b6d4)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div>
-            <h3>Zephyr</h3>
-            <p class="followers">4.3M followers</p>
+            <h3>Zephyr</h3>             <p class="followers">22K followers</p>
             <span class="genre-tag">Electronic</span>
           </div>
           <button class="follow-btn" data-followed="false" aria-label="Follow Zephyr">Follow</button>
@@ -1002,7 +1001,8 @@
       <div class="footer-col">
         <h4>Artists</h4>
         <ul>
-          <li><a href="#">OneBEAT for Artists</a></li>
+          <li><a href="register.html">Register as Artist</a></li>
+          <li><a href="artist.html">Artist Portal</a></li>
           <li><a href="#">Distribute your music</a></li>
           <li><a href="#">Fan insights</a></li>
           <li><a href="#">Royalties</a></li>
@@ -1020,10 +1020,10 @@
       <div class="footer-col">
         <h4>Support</h4>
         <ul>
-          <li><a href="#">Help center</a></li>
+          <li><a href="admin.html">Admin Dashboard</a></li>
+          <li><a href="app.html">Listen Now</a></li>
           <li><a href="#">Privacy policy</a></li>
           <li><a href="#">Terms of service</a></li>
-          <li><a href="#">Contact us</a></li>
         </ul>
       </div>
     </div>
@@ -1131,15 +1131,14 @@
   marqueeTrack.innerHTML = genrePills() + genrePills(); // duplicated for seamless loop
 
   /* ---------- Trending tracks (rendered data) ---------- */
-  var tracks = [
-    { title: "Neon Dreams", artist: "Kira Solace", dur: "3:24", plays: "18.2M", grad: "linear-gradient(135deg,#7c3aed,#db2777 60%,#f97316)" },
-    { title: "Golden Hour", artist: "The Velvet Echo", dur: "2:58", plays: "12.7M", grad: "linear-gradient(135deg,#f59e0b,#ef4444)" },
-    { title: "Midnight Drive", artist: "Aya Blaze", dur: "4:12", plays: "11.4M", grad: "linear-gradient(135deg,#0ea5e9,#6366f1)" },
-    { title: "Sugar Rush", artist: "DJ Kavana", dur: "3:01", plays: "9.9M", grad: "linear-gradient(135deg,#ec4899,#a855f7)" },
-    { title: "Ocean Eyes", artist: "Lena Marr", dur: "3:47", plays: "8.6M", grad: "linear-gradient(135deg,#10b981,#0ea5e9)" },
-    { title: "Pulse", artist: "Zephyr", dur: "2:41", plays: "7.3M", grad: "linear-gradient(135deg,#f472b6,#8b5cf6)" },
-    { title: "Velvet Sky", artist: "Kira Solace", dur: "3:33", plays: "6.8M", grad: "linear-gradient(135deg,#6366f1,#06b6d4)" },
-    { title: "Lagos Nights", artist: "DJ Kavana", dur: "3:18", plays: "6.1M", grad: "linear-gradient(135deg,#f97316,#f43f5e)" }
+  var tracks = [     { title: "Neon Dreams", artist: "Kira Solace", dur: "3:24", plays: "582K", grad: "linear-gradient(135deg,#7c3aed,#db2777 60%,#f97316)" },
+    { title: "Golden Hour", artist: "The Velvet Echo", dur: "2:58", plays: "421K", grad: "linear-gradient(135deg,#f59e0b,#ef4444)" },
+    { title: "Midnight Drive", artist: "Aya Blaze", dur: "4:12", plays: "387K", grad: "linear-gradient(135deg,#0ea5e9,#6366f1)" },
+    { title: "Sugar Rush", artist: "DJ Kavana", dur: "3:01", plays: "314K", grad: "linear-gradient(135deg,#ec4899,#a855f7)" },
+    { title: "Ocean Eyes", artist: "Lena Marr", dur: "3:47", plays: "276K", grad: "linear-gradient(135deg,#10b981,#0ea5e9)" },
+    { title: "Pulse", artist: "Zephyr", dur: "2:41", plays: "198K", grad: "linear-gradient(135deg,#f472b6,#8b5cf6)" },
+    { title: "Velvet Sky", artist: "Kira Solace", dur: "3:33", plays: "165K", grad: "linear-gradient(135deg,#6366f1,#06b6d4)" },
+    { title: "Lagos Nights", artist: "DJ Kavana", dur: "3:18", plays: "143K", grad: "linear-gradient(135deg,#f97316,#f43f5e)" }
   ];
 
   var scroller = document.getElementById("tracksScroller");

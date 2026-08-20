@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OneBEAT — Artist Portal</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23a855f7'/%3E%3Cstop offset='.5' stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%23f97316'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='%2307070b'/%3E%3Cpath d='M12 9.5v13M12 13l11-3.5v13' fill='none' stroke='url(%23g)' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07070b;--bg-soft:#0c0c13;--surface:rgba(255,255,255,.04);--surface-strong:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.09);--text:#f4f4f8;--muted:#9d9dab;
+  --brand:#a855f7;--brand-2:#ec4899;--brand-3:#f97316;
+  --grad:linear-gradient(120deg,#a855f7,#ec4899 55%,#f97316);
+  --grad-soft:linear-gradient(120deg,rgba(168,85,247,.16),rgba(236,72,153,.16));
+  --green:#34d399;--red:#f87171;--yellow:#fbbf24;--blue:#60a5fa;
+  --radius:14px;--radius-sm:10px;
+  --font-display:"Space Grotesk",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --sidebar-w:250px;
+}
+html,body{height:100%;font-family:var(--font-body);background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}input,select,textarea{font-family:inherit}
+img,svg{display:block}a{color:inherit;text-decoration:none}
+::selection{background:rgba(168,85,247,.4);color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:99px}::-webkit-scrollbar-track{background:transparent}
+
+.app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;height:100vh;overflow:hidden}
+
+.sidebar{grid-row:1/3;display:flex;flex-direction:column;background:var(--bg-soft);border-right:1px solid var(--border);padding:16px 10px;gap:4px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px;font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:-.02em;margin-bottom:12px}
+.brand-mark{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--grad);box-shadow:0 6px 20px -6px rgba(236,72,153,.55)}
+.brand-mark svg{width:16px;height:16px;color:#fff}
+.brand small{display:block;font-size:8px;letter-spacing:.3em;color:var(--muted);font-family:var(--font-body);font-weight:600;margin-top:-3px}
+.side-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:14px 12px 6px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);color:var(--muted);font-size:13.5px;font-weight:600;border:0;background:none;text-align:left;width:100%;position:relative;transition:all .2s var(--ease)}
+.nav-item:hover{color:var(--text);background:var(--surface-strong)}
+.nav-item.active{color:#fff;background:rgba(168,85,247,.18)}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.7}.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;background:var(--brand-2);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px}
+.sidebar-footer{margin-top:auto;border-top:1px solid var(--border);padding:14px 10px 6px}
+.sidebar-footer .artist-info{display:flex;align-items:center;gap:10px}
+.artist-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:12px;flex-shrink:0}
+.artist-name{font-size:13px;font-weight:600}.artist-role{font-size:11px;color:var(--muted)}
+
+.main{grid-row:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:14px 28px;background:linear-gradient(to bottom,var(--bg) 70%,transparent);backdrop-filter:blur(12px)}
+.topbar h1{font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-.02em}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;color:var(--text)}
+.hamburger svg{width:18px;height:18px}
+.notif-btn{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;color:var(--muted);transition:all .2s}
+.notif-btn:hover{color:var(--text)}.notif-btn svg{width:18px;height:18px}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--brand-2);border:2px solid var(--bg)}
+
+.content{padding:8px 28px 40px;flex:1}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all .3s var(--ease)}
+.stat-card:hover{border-color:rgba(255,255,255,.16);transform:translateY(-2px)}
+.stat-card h3{font-size:26px;font-weight:700;font-family:var(--font-display);letter-spacing:-.03em}
+.stat-card p{font-size:12.5px;color:var(--muted);margin-top:2px}
+.stat-card .trend{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-top:8px;padding:3px 8px;border-radius:99px}
+.trend.up{color:var(--green);background:rgba(52,211,153,.1)}
+.trend.down{color:var(--red);background:rgba(248,113,113,.1)}
+
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+.chart-card.full{grid-column:1/-1}
+.chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.chart-head h3{font-size:15px;font-weight:700}
+.chart-area{position:relative;height:200px}
+.chart-bars{display:flex;align-items:flex-end;gap:4px;height:100%;padding-bottom:24px}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;background:var(--grad);min-height:4px;transition:height .5s var(--ease);cursor:pointer;position:relative}
+.chart-bar:hover{opacity:.85}
+.chart-bar::after{content:attr(data-val);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .2s}
+.chart-bar:hover::after{opacity:1}
+.chart-labels{display:flex;justify-content:space-between;position:absolute;bottom:0;left:0;right:0;font-size:10px;color:var(--muted)}
+
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.table-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:12px;flex-wrap:wrap}
+.table-head h3{font-size:15px;font-weight:700}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 16px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.table-scroll{overflow-x:auto}
+.table-avatar{width:36px;height:36px;border-radius:50%;display:inline-grid;place-items:center;font-weight:700;font-size:11px;flex-shrink:0;vertical-align:middle;margin-right:10px}
+.table-artist-cell{display:flex;align-items:center}
+
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.badge-green{color:var(--green);background:rgba(52,211,153,.12)}
+.badge-yellow{color:var(--yellow);background:rgba(251,191,36,.12)}
+.badge-red{color:var(--red);background:rgba(248,113,113,.12)}
+.badge-blue{color:var(--blue);background:rgba(96,165,250,.12)}
+.badge-purple{color:var(--brand);background:rgba(168,85,247,.12)}
+.badge-gray{color:var(--muted);background:rgba(255,255,255,.06)}
+
+.btn{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:13px;padding:8px 16px;border-radius:var(--radius-sm);border:1px solid transparent;transition:all .2s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 6px 20px -6px rgba(236,72,153,.5)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px -6px rgba(236,72,153,.65)}
+.btn-ghost{background:var(--surface);color:var(--text);border-color:var(--border)}
+.btn-ghost:hover{background:var(--surface-strong);border-color:rgba(255,255,255,.18)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--red);border-color:rgba(248,113,113,.25)}
+.action-btns{display:flex;gap:6px}
+.action-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 8px;color:var(--muted);transition:all .2s}
+.action-btn:hover{color:var(--text);border-color:rgba(255,255,255,.2);background:var(--surface-strong)}
+.action-btn svg{width:14px;height:14px}
+
+/* Upload stepper */
+.upload-stepper{display:flex;align-items:center;gap:0;margin-bottom:32px;position:relative}
+.upload-step{display:flex;align-items:center;gap:10px;flex:1;position:relative}
+.upload-step .step-num{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;border:2px solid var(--border);color:var(--muted);flex-shrink:0;transition:all .3s}
+.upload-step.active .step-num{border-color:var(--brand);background:rgba(168,85,247,.15);color:var(--brand)}
+.upload-step.done .step-num{border-color:var(--green);background:rgba(52,211,153,.15);color:var(--green)}
+.upload-step .step-label{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.upload-step.active .step-label{color:var(--text)}
+.upload-step.done .step-label{color:var(--green)}
+.upload-step::after{content:"";position:absolute;left:calc(100% + 0px);top:50%;width:100%;height:2px;background:var(--border);z-index:-1}
+.upload-step:last-child::after{display:none}
+.upload-step.done::after{background:var(--green)}
+
+.upload-form{max-width:640px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--text);font-size:13.5px;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(168,85,247,.5)}
+.form-group select option{background:var(--bg)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.upload-drop{border:2px dashed var(--border);border-radius:var(--radius);padding:48px;text-align:center;cursor:pointer;transition:all .3s}
+.upload-drop:hover{border-color:rgba(168,85,247,.5);background:rgba(168,85,247,.04)}
+.upload-drop svg{width:48px;height:48px;color:var(--muted);margin:0 auto 14px}
+.upload-drop h3{font-size:16px;margin-bottom:6px}
+.upload-drop p{color:var(--muted);font-size:13px}
+.upload-drop .uploaded{display:none;padding:14px;background:rgba(52,211,153,.1);border-radius:10px;border:1px solid rgba(52,211,153,.3)}
+.upload-drop.has-file .uploaded{display:block}
+.upload-drop.has-file h3,.upload-drop.has-file>p,.upload-drop.has-file>svg{display:none}
+
+.preview-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-top:20px}
+.preview-card h4{margin-bottom:12px}
+.preview-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.preview-row:last-child{border-bottom:none}
+.preview-row span:first-child{color:var(--muted)}
+
+/* Profile section */
+.profile-hero{position:relative;border-radius:22px;overflow:hidden;margin-bottom:24px}
+.profile-cover{height:200px;position:relative}
+.profile-cover .cover-art{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.profile-cover .cover-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 10%,transparent 60%)}
+.profile-details{position:relative;padding:0 28px 28px;margin-top:-50px;display:flex;align-items:flex-end;gap:20px}
+.profile-avatar{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;font-size:32px;font-weight:700;flex-shrink:0;border:4px solid var(--bg);position:relative;z-index:1;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.profile-info h2{font-family:var(--font-display);font-size:24px;font-weight:700}
+.profile-info p{color:var(--muted);font-size:13px;margin-top:2px}
+.profile-stats{display:flex;gap:24px;margin-top:10px}
+.profile-stats .ps{text-align:center}
+.profile-stats .ps strong{display:block;font-size:16px;font-weight:700}
+.profile-stats .ps span{font-size:11px;color:var(--muted)}
+
+/* Settings section */
+.settings-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+.settings-section h3{font-size:15px;font-weight:700;margin-bottom:16px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:13.5px;font-weight:500}
+.setting-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.toggle{position:relative;width:44px;height:24px;border-radius:99px;background:var(--surface-strong);border:1px solid var(--border);cursor:pointer;transition:all .2s;flex-shrink:0}
+.toggle.on{background:var(--brand);border-color:var(--brand)}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle.on::after{transform:translateX(20px)}
+
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+.empty svg{width:48px;height:48px;margin:0 auto 14px;opacity:.4}
+.empty h3{color:var(--text);font-size:17px;margin-bottom:6px}
+
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:600;padding:8px 18px;border-radius:99px;transition:all .2s var(--ease)}
+.chip:hover{color:var(--text);transform:translateY(-1px)}
+.chip.active{background:var(--brand);border-color:transparent;color:#fff}
+
+.toast{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;align-items:center;gap:10px;background:rgba(20,20,32,.95);border:1px solid var(--border);border-radius:var(--radius);padding:12px 18px;font-size:13px;font-weight:500;box-shadow:0 20px 60px -12px rgba(0,0,0,.8);backdrop-filter:blur(16px);transform:translateY(80px);opacity:0;transition:all .4s var(--ease);max-width:380px}
+.toast.show{transform:none;opacity:1}
+.toast svg{width:18px;height:18px;flex-shrink:0}
+
+.modal-backdrop{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:rgba(7,7,11,.75);backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-backdrop.open{opacity:1;pointer-events:auto}
+.modal{width:min(600px,95%);max-height:90vh;background:linear-gradient(180deg,rgba(20,20,32,.98),rgba(12,12,20,.99));border:1px solid var(--border);border-radius:20px;padding:28px;overflow-y:auto;transform:translateY(20px);transition:transform .3s var(--ease)}
+.modal-backdrop.open .modal{transform:none}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-head h2{font-family:var(--font-display);font-size:20px;font-weight:700}
+.modal-close{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px;color:var(--muted);transition:all .2s}
+.modal-close:hover{color:var(--text)}
+.modal-close svg{width:16px;height:16px}
+
+@media(max-width:1024px){.app{grid-template-columns:1fr}.sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;width:var(--sidebar-w);transform:translateX(-100%);transition:transform .3s var(--ease);box-shadow:20px 0 60px -20px rgba(0,0,0,.7)}.sidebar.open{transform:none}.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55;opacity:0;pointer-events:none;transition:opacity .3s}.scrim.show{opacity:1;pointer-events:auto}.hamburger{display:flex!important}.chart-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.content{padding:8px 14px 40px}.topbar{padding:10px 14px}.form-row{grid-template-columns:1fr}.profile-details{flex-direction:column;align-items:flex-start}.upload-step .step-label{display:none}}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.fade-in{animation:fadeIn .4s var(--ease) both}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9.5v13M12 13l11-3.5v13"/></svg></span>
+      <span>OneBEAT<small>ARTIST</small></span>
+    </a>
+    <div class="side-label">Main</div>
+    <button class="nav-item active" data-page="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Overview</button>
+    <button class="nav-item" data-page="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</button>
+    <div class="side-label">Music</div>
+    <button class="nav-item" data-page="songs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>My Songs<span class="nav-badge">12</span></button>
+    <button class="nav-item" data-page="albums"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>Albums</button>
+    <button class="nav-item" data-page="eps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>EPs</button>
+    <button class="nav-item" data-page="upload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload Music</button>
+    <button class="nav-item" data-page="releases"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Release Manager</button>
+    <div class="side-label">Insights</div>
+    <button class="nav-item" data-page="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</button>
+    <button class="nav-item" data-page="audience"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Audience</button>
+    <div class="side-label">Engagement</div>
+    <button class="nav-item" data-page="comments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comments<span class="nav-badge">8</span></button>
+    <button class="nav-item" data-page="notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge">3</span></button>
+    <button class="nav-item" data-page="earnings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Earnings</button>
+    <button class="nav-item" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+
+    <div class="sidebar-footer">
+      <div class="artist-info">
+        <span class="artist-avatar" style="background:linear-gradient(135deg,#a855f7,#ec4899)">KS</span>
+        <div><div class="artist-name">Kira Solace</div><div class="artist-role">✓ Verified Artist</div></div>
+      </div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <button class="hamburger" id="hamburger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <h1 id="pageTitle">Overview</h1>
+      <div class="topbar-right">
+        <button class="notif-btn" id="notifToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></button>
+        <a href="app.html" class="btn btn-ghost btn-sm">Public Platform</a>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="modalBg"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+var GENRES=["Pop","R&B","Hip Hop","Afrobeat","Electronic","Rock","Indie","Jazz","Soul","Latin","Country"];
+var LANGUAGES=["English","Spanish","French","Portuguese","Yoruba","Swahili","Hindi","Japanese","Korean","Mandarin"];
+
+/* ===== DATA ===== */
+var artistProfile={
+  stageName:"Kira Solace",legalName:"Kira M. Solace",email:"kira@onebeat.io",phone:"+1-555-0101",
+  country:"United States",location:"Los Angeles, CA",type:"Solo",genre:"Pop",
+  bio:"Independent pop artist known for ethereal vocals and cinematic production. Blending electronic textures with organic instrumentation to create immersive sonic landscapes.",
+  verified:true,followers:84200,monthlyListeners:34800,totalStreams:582000,
+  socials:{instagram:"@kirasolace",twitter:"@kira_solace",spotify:"Kira Solace",youtube:"Kira Solace Music"},
+  label:"Independent",avatar:"linear-gradient(135deg,#a855f7,#ec4899)",cover:"linear-gradient(135deg,#a855f7,#ec4899 55%,#f97316)"
+};
+
+var mySongs=[
+  {id:"s1",title:"Neon Dreams",album:"Electric Sky",genre:"Pop",duration:204,status:"published",streams:142000,likes:8900,downloads:2300,date:"2024-09-15",featured:""},
+  {id:"s2",title:"Velvet Sky",album:"Electric Sky",genre:"Pop",duration:213,status:"published",streams:52000,likes:3400,downloads:950,date:"2024-09-15",featured:""},
+  {id:"s3",title:"Ember & Ash",album:"Electric Sky",genre:"Pop",duration:241,status:"published",streams:48000,likes:2800,downloads:820,date:"2024-09-15",featured:""},
+  {id:"s4",title:"Electric Feel",album:"Electric Sky",genre:"Pop",duration:198,status:"published",streams:42000,likes:2200,downloads:680,date:"2024-09-15",featured:""},
+  {id:"s5",title:"Crystal Waves",album:"Electric Sky",genre:"Pop",duration:215,status:"published",streams:36000,likes:1900,downloads:550,date:"2024-09-15",featured:""},
+  {id:"s6",title:"Midnight Bloom",album:"Electric Sky",genre:"Pop",duration:230,status:"published",streams:31000,likes:1500,downloads:420,date:"2024-09-15",featured:""},
+  {id:"s7",title:"Starfall",album:"Electric Sky",genre:"Pop",duration:207,status:"published",streams:28000,likes:1200,downloads:350,date:"2024-09-15",featured:""},
+  {id:"s8",title:"Daydream",album:"Electric Sky",genre:"Pop",duration:189,status:"published",streams:24000,likes:950,downloads:280,date:"2024-09-15",featured:""},
+  {id:"s9",title:"Echoes",album:"Electric Sky",genre:"Pop",duration:222,status:"published",streams:21000,likes:850,downloads:240,date:"2024-09-15",featured:""},
+  {id:"s10",title:"Horizon",album:"",genre:"Pop",duration:210,status:"pending_review",streams:0,likes:0,downloads:0,date:"2025-08-18",featured:""},
+  {id:"s11",title:"After Midnight",album:"",genre:"Pop",duration:195,status:"draft",streams:0,likes:0,downloads:0,date:"2025-08-19",featured:""},
+  {id:"s12",title:"Purple Rain Remix",album:"Electric Sky",genre:"Pop",duration:240,status:"published",streams:12000,likes:600,downloads:180,date:"2024-12-01",featured:""}
+];
+
+var myAlbums=[
+  {id:"al1",title:"Electric Sky",genre:"Pop",tracks:8,released:"2024-09-15",status:"published",streams:320000},
+  {id:"al2",title:"Midnight Sessions",genre:"Pop",tracks:6,released:"2025-08-20",status:"pending_review",streams:0}
+];
+
+var myEPs=[
+  {id:"ep1",title:"Velvet Sessions",genre:"Pop",tracks:4,released:"2024-06-10",status:"published",streams:68000}
+];
+
+var myComments=[
+  {id:"c1",user:"MusicLover99",song:"Neon Dreams",text:"This song is absolutely incredible! The production is next level 🔥",time:"2 hours ago",likes:42},
+  {id:"c2",user:"BeatDropper",song:"Velvet Sky",text:"Kira never misses. This album is a masterpiece.",time:"5 hours ago",likes:28},
+  {id:"c3",user:"SynthWave_Fan",song:"Neon Dreams",text:"The synth work in this is so unique. More like this please!",time:"1 day ago",likes:35},
+  {id:"c4",user:"IndieVibes",song:"Ember & Ash",text:"Underrated track. This deserves more streams.",time:"1 day ago",likes:19},
+  {id:"c5",user:"PopPrincess",song:"Electric Feel",text:"Can't stop listening to this on repeat! 💜",time:"2 days ago",likes:51},
+  {id:"c6",user:"BassHead420",song:"Crystal Waves",text:"The drop at 2:30 is insane! Best production I've heard all year.",time:"3 days ago",likes:33},
+  {id:"c7",user:"MelodyMaker",song:"Starfall",text:"Pure poetry in musical form. Kira is a genius.",time:"4 days ago",likes:22},
+  {id:"c8",user:"NightOwl",song:"Midnight Bloom",text:"Perfect song for late night drives. Ethereal vibes.",time:"5 days ago",likes:27}
+];
+
+var myNotifications=[
+  {id:"n1",title:"Song Approved!",message:"'Neon Dreams' has been approved and is now live on the platform.",time:"1 day ago",read:false,type:"success"},
+  {id:"n2",title:"New Follower Milestone",message:"You've reached 84K followers! 🎉",time:"2 days ago",read:false,type:"success"},
+  {id:"n3",title:"Upload Pending",message:"'Horizon' is awaiting administrative review.",time:"3 days ago",read:false,type:"info"},
+  {id:"n4",title:"New Comment",message:"MusicLover99 commented on 'Neon Dreams': \"This song is absolutely incredible!\"",time:"2 hours ago",read:true,type:"info"},
+  {id:"n5",title:"Stream Milestone",message:"'Neon Dreams' reached 100K streams!",time:"1 week ago",read:true,type:"success"}
+];
+
+var uploadState={step:1,fileName:"",fileSize:"",title:"",featured:"",album:"",genre:"Pop",language:"English",releaseDate:"",copyright:"",composer:"",producer:"",description:"",artworkName:""};
+
+function fmt(n){if(n>=1e9)return(n/1e9).toFixed(1)+"B";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e3)return(n/1e3).toFixed(1)+"K";return n.toString()}
+function fmtDur(s){var m=Math.floor(s/60);return m+":"+(s%60<10?"0":"")+(s%60)}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function initials(name){return name.split(" ").map(function(w){return w[0]}).join("").substring(0,2).toUpperCase()}
+function statusBadge(s){var map={pending:"badge-yellow",under_review:"badge-blue",approved:"badge-green",rejected:"badge-red",changes_requested:"badge-yellow",suspended:"badge-red",draft:"badge-gray",published:"badge-green",pending_review:"badge-yellow"};return '<span class="badge '+(map[s]||"badge-gray")+'">'+esc(s.replace(/_/g," "))+'</span>'}
+function showToast(msg){var t=$("#toast");t.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>'+esc(msg)+'</span>';t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("show")},3500)}
+
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var NOTE_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+
+/* ===== NAVIGATION ===== */
+var currentPage="overview";
+var pageTitles={overview:"Overview",profile:"My Profile",songs:"My Songs",albums:"Albums",eps:"EPs",upload:"Upload Music",releases:"Release Manager",analytics:"Analytics",audience:"Audience",comments:"Comments",notifications:"Notifications",earnings:"Earnings",settings:"Settings"};
+
+function setPage(page){
+  currentPage=page;
+  $$(".nav-item").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});
+  $("#pageTitle").textContent=pageTitles[page]||page;
+  renderPage();
+  closeSidebar();
+}
+
+function renderPage(){
+  var c=$("#content");c.innerHTML="";c.className="content fade-in";
+  var fn=pages[currentPage];if(fn)c.innerHTML=fn();
+  bindEvents();
+}
+
+/* ===== PAGES ===== */
+var pages={};
+
+pages.overview=function(){
+  var publishedSongs=mySongs.filter(function(s){return s.status==="published"});
+  var totalStreams=publishedSongs.reduce(function(a,s){return a+s.streams},0);
+  var totalLikes=publishedSongs.reduce(function(a,s){return a+s.likes},0);
+  var totalDownloads=publishedSongs.reduce(function(a,s){return a+s.downloads},0);
+  var stats=[
+    {label:"Total Streams",value:fmt(totalStreams),color:"var(--brand)"},
+    {label:"Monthly Listeners",value:fmt(artistProfile.monthlyListeners),color:"var(--brand-2)"},
+    {label:"Followers",value:fmt(artistProfile.followers),color:"var(--green)"},
+    {label:"Total Likes",value:fmt(totalLikes),color:"var(--red)"},
+    {label:"Downloads",value:fmt(totalDownloads),color:"var(--blue)"},
+    {label:"Songs",value:publishedSongs.length,color:"var(--brand-3)"},
+    {label:"Albums",value:myAlbums.length,color:"var(--yellow)"}
+  ];
+  var monthlyStreams=[42,48,56,68,78,88,96,108,124,142,158,172];
+  var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var maxS=Math.max.apply(null,monthlyStreams)||1;
+  var topSongs=publishedSongs.sort(function(a,b){return b.streams-a.streams}).slice(0,5);
+  var recentRelease=mySongs.filter(function(s){return s.status==="published"}).sort(function(a,b){return new Date(b.date)-new Date(a.date)}).slice(0,3);
+
+  return '<div class="stat-grid">'+stats.map(function(s){return '<div class="stat-card"><h3>'+s.value+'</h3><p>'+esc(s.label)+'</p></div>'}).join("")+'</div>'+
+  '<div class="chart-grid">'+
+  '<div class="chart-card full"><div class="chart-head"><h3>Stream Growth</h3></div><div class="chart-area"><div class="chart-bars">'+months.map(function(m,i){var h=(monthlyStreams[i]/maxS)*100;return '<div class="chart-bar" style="height:'+h+'%" data-val="'+monthlyStreams[i]+'M"></div>'}).join("")+'</div><div class="chart-labels">'+months.map(function(m){return '<span>'+m+'</span>'}).join("")+'</div></div></div>'+
+  '<div class="chart-card"><div class="chart-head"><h3>Top Songs</h3></div><div style="display:grid;gap:8px">'+topSongs.map(function(s,i){
+    var pct=Math.round((s.streams/topSongs[0].streams)*100);
+    return '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:13px;font-weight:700;color:var(--muted);min-width:20px;text-align:right">'+(i+1)+'</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:13px;font-weight:600">'+esc(s.title)+'</span><span style="font-size:12px;color:var(--muted)">'+fmt(s.streams)+'</span></div><div style="height:4px;border-radius:4px;background:var(--surface-strong);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--grad);border-radius:4px"></div></div></div></div>';
+  }).join("")+'</div></div>'+
+  '<div class="chart-card"><div class="chart-head"><h3>Recent Releases</h3></div><div style="display:grid;gap:10px">'+recentRelease.map(function(s){
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;background:var(--surface)"><div style="width:42px;height:42px;border-radius:8px;background:var(--grad);display:grid;place-items:center;flex-shrink:0">'+NOTE_SVG+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(s.title)+'</div><div style="font-size:11px;color:var(--muted)">'+fmt(s.streams)+' streams</div></div>'+statusBadge(s.status)+'</div>';
+  }).join("")+'</div></div></div>';
+};
+
+pages.profile=function(){
+  return '<div class="profile-hero"><div class="profile-cover"><div class="cover-art" style="background:'+artistProfile.cover+'"></div></div><div class="profile-details"><div class="profile-avatar" style="background:'+artistProfile.avatar+'">'+esc(initials(artistProfile.stageName))+'</div><div class="profile-info"><h2>'+esc(artistProfile.stageName)+(artistProfile.verified?' <span style="color:var(--brand)">✓ Verified</span>':'')+'</h2><p>'+esc(artistProfile.genre)+' · '+esc(artistProfile.location)+'</p><div class="profile-stats"><div class="ps"><strong>'+fmt(artistProfile.followers)+'</strong><span>Followers</span></div><div class="ps"><strong>'+fmt(artistProfile.monthlyListeners)+'</strong><span>Monthly Listeners</span></div><div class="ps"><strong>'+fmt(artistProfile.totalStreams)+'</strong><span>Total Streams</span></div><div class="ps"><strong>'+myAlbums.length+'</strong><span>Albums</span></div></div></div></div></div>'+
+  '<div class="settings-section"><h3>Biography</h3><p style="color:var(--muted);font-size:13.5px;line-height:1.6">'+esc(artistProfile.bio)+'</p></div>'+
+  '<div class="settings-section"><h3>Social Links</h3>'+Object.keys(artistProfile.socials).map(function(k){return '<div class="setting-row"><div class="setting-label" style="text-transform:capitalize">'+esc(k)+'</div><span style="color:var(--brand);font-size:13px">'+esc(artistProfile.socials[k])+'</span></div>'}).join("")+'</div>'+
+  '<div class="settings-section"><h3>Details</h3>'+
+  '<div class="setting-row"><div class="setting-label">Legal Name</div><span style="font-size:13px">'+esc(artistProfile.legalName)+'</span></div>'+
+  '<div class="setting-row"><div class="setting-label">Email</div><span style="font-size:13px">'+esc(artistProfile.email)+'</span></div>'+
+  '<div class="setting-row"><div class="setting-label">Label</div><span style="font-size:13px">'+esc(artistProfile.label)+'</span></div>'+
+  '<div class="setting-row"><div class="setting-label">Country</div><span style="font-size:13px">'+esc(artistProfile.country)+'</span></div>'+
+  '</div><button class="btn btn-primary" id="editProfileBtn">Edit Profile</button>';
+};
+
+pages.songs=function(){
+  var rows=mySongs.map(function(s){
+    return '<tr><td><strong>'+esc(s.title)+'</strong></td><td>'+esc(s.album||"—")+'</td><td>'+esc(s.genre)+'</td><td>'+fmtDur(s.duration)+'</td><td>'+fmt(s.streams)+'</td><td>'+fmt(s.likes)+'</td><td>'+statusBadge(s.status)+'</td><td>'+esc(s.date)+'</td></tr>';
+  }).join("");
+  return '<div class="table-wrap"><div class="table-head"><h3>My Songs ('+mySongs.length+')</h3><button class="btn btn-primary btn-sm" data-nav="upload">+ Upload New</button></div><div class="table-scroll"><table><thead><tr><th>Title</th><th>Album</th><th>Genre</th><th>Duration</th><th>Streams</th><th>Likes</th><th>Status</th><th>Date</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+};
+
+pages.albums=function(){
+  return '<div class="table-wrap"><div class="table-head"><h3>My Albums ('+myAlbums.length+')</h3></div><div class="table-scroll"><table><thead><tr><th>Album</th><th>Genre</th><th>Tracks</th><th>Streams</th><th>Status</th><th>Released</th></tr></thead><tbody>'+myAlbums.map(function(a){return '<tr><td><strong>'+esc(a.title)+'</strong></td><td>'+esc(a.genre)+'</td><td>'+a.tracks+'</td><td>'+fmt(a.streams)+'</td><td>'+statusBadge(a.status)+'</td><td>'+esc(a.released)+'</td></tr>'}).join("")+'</tbody></table></div></div>';
+};
+
+pages.eps=function(){
+  return '<div class="table-wrap"><div class="table-head"><h3>My EPs ('+myEPs.length+')</h3></div><div class="table-scroll"><table><thead><tr><th>EP</th><th>Genre</th><th>Tracks</th><th>Streams</th><th>Status</th><th>Released</th></tr></thead><tbody>'+myEPs.map(function(e){return '<tr><td><strong>'+esc(e.title)+'</strong></td><td>'+esc(e.genre)+'</td><td>'+e.tracks+'</td><td>'+fmt(e.streams)+'</td><td>'+statusBadge(e.status)+'</td><td>'+esc(e.released)+'</td></tr>'}).join("")+'</tbody></table></div></div>';
+};
+
+pages.upload=function(){
+  var steps=[1,2,3,4,5];
+  var stepLabels=["Upload Audio","Metadata","Artwork","Preview","Submit"];
+  var stepperHtml=steps.map(function(s,i){
+    var cls=s<uploadState.step?"done":s===uploadState.step?"active":"";
+    return '<div class="upload-step '+cls+'"><div class="step-num">'+(s<uploadState.step?"✓":s)+'</div><div class="step-label">'+stepLabels[i]+'</div></div>';
+  }).join("");
+
+  var body="";
+  if(uploadState.step===1){
+    body='<div class="upload-drop" id="audioDropZone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><h3>Drop your audio file here</h3><p>or click to browse · MP3, WAV, FLAC, AAC up to 50MB</p><div class="uploaded"><p style="color:var(--green);font-weight:600">✓ '+esc(uploadState.fileName||"audio_file.mp3")+'</p><p style="color:var(--muted);font-size:12px">'+esc(uploadState.fileSize||"4.2 MB")+'</p></div></div>'+
+    '<div style="margin-top:20px;text-align:right"><button class="btn btn-primary" id="uploadNext">Continue →</button></div>';
+  }else if(uploadState.step===2){
+    body='<div class="upload-form">'+
+      '<div class="form-group"><label>Song Title *</label><input id="upTitle" value="'+esc(uploadState.title)+'" placeholder="Enter song title"/></div>'+
+      '<div class="form-row"><div class="form-group"><label>Featured Artists</label><input id="upFeatured" value="'+esc(uploadState.featured)+'" placeholder="Optional"/></div><div class="form-group"><label>Album / EP</label><input id="upAlbum" value="'+esc(uploadState.album)+'" placeholder="Optional"/></div></div>'+
+      '<div class="form-row"><div class="form-group"><label>Genre *</label><select id="upGenre">'+GENRES.map(function(g){return '<option'+(uploadState.genre===g?' selected':'')+'>'+g+'</option>'}).join("")+'</select></div><div class="form-group"><label>Language</label><select id="upLang">'+LANGUAGES.map(function(l){return '<option'+(uploadState.language===l?' selected':'')+'>'+l+'</option>'}).join("")+'</select></div></div>'+
+      '<div class="form-row"><div class="form-group"><label>Release Date</label><input type="date" id="upDate" value="'+esc(uploadState.releaseDate)+'"/></div><div class="form-group"><label>Copyright</label><input id="upCopyright" value="'+esc(uploadState.copyright)+'" placeholder="© 2025 Artist Name"/></div></div>'+
+      '<div class="form-row"><div class="form-group"><label>Composer</label><input id="upComposer" value="'+esc(uploadState.composer)+'" placeholder="Composer name"/></div><div class="form-group"><label>Producer</label><input id="upProducer" value="'+esc(uploadState.producer)+'" placeholder="Producer name"/></div></div>'+
+      '<div class="form-group"><label>Description</label><textarea id="upDesc" placeholder="About this track...">'+esc(uploadState.description)+'</textarea></div>'+
+      '<div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn btn-ghost" id="uploadPrev">← Back</button><button class="btn btn-primary" id="uploadNext">Continue →</button></div></div>';
+  }else if(uploadState.step===3){
+    body='<div class="upload-drop" id="artDropZone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><h3>Upload Cover Artwork</h3><p>Recommended 3000x3000px · JPG, PNG up to 10MB</p><div class="uploaded"><p style="color:var(--green);font-weight:600">✓ '+esc(uploadState.artworkName||"cover_art.jpg")+'</p></div></div>'+
+    '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px"><button class="btn btn-ghost" id="uploadPrev">← Back</button><button class="btn btn-primary" id="uploadNext">Continue →</button></div>';
+  }else if(uploadState.step===4){
+    body='<div class="preview-card"><h4>Release Preview</h4>'+
+      '<div class="preview-row"><span>Title</span><strong>'+esc(uploadState.title||"Untitled")+'</strong></div>'+
+      '<div class="preview-row"><span>Artist</span><strong>Kira Solace</strong></div>'+
+      '<div class="preview-row"><span>Featured</span><span>'+esc(uploadState.featured||"None")+'</span></div>'+
+      '<div class="preview-row"><span>Album</span><span>'+esc(uploadState.album||"Single")+'</span></div>'+
+      '<div class="preview-row"><span>Genre</span><span>'+esc(uploadState.genre)+'</span></div>'+
+      '<div class="preview-row"><span>Language</span><span>'+esc(uploadState.language)+'</span></div>'+
+      '<div class="preview-row"><span>Release Date</span><span>'+esc(uploadState.releaseDate||"Upon approval")+'</span></div>'+
+      '<div class="preview-row"><span>Copyright</span><span>'+esc(uploadState.copyright||"© 2025 Kira Solace")+'</span></div>'+
+      '<div class="preview-row"><span>Composer</span><span>'+esc(uploadState.composer||"—")+'</span></div>'+
+      '<div class="preview-row"><span>Producer</span><span>'+esc(uploadState.producer||"—")+'</span></div>'+
+      '<div class="preview-row"><span>Audio</span><span style="color:var(--green)">✓ '+esc(uploadState.fileName||"audio_file.mp3")+'</span></div>'+
+      '<div class="preview-row"><span>Artwork</span><span style="color:var(--green)">✓ '+esc(uploadState.artworkName||"cover_art.jpg")+'</span></div>'+
+    '</div>'+
+    '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px"><button class="btn btn-ghost" id="uploadPrev">← Back</button><button class="btn btn-primary" id="uploadNext">Continue →</button></div>';
+  }else if(uploadState.step===5){
+    body='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3>Ready to Submit</h3><p style="max-width:400px;margin:0 auto 20px">Your release will be submitted for administrative review. You\u2019ll be notified once it\u2019s approved and published.</p><button class="btn btn-primary" id="submitRelease" style="font-size:15px;padding:12px 32px">Submit for Review</button></div>';
+  }
+
+  return '<div class="upload-stepper">'+stepperHtml+'</div>'+body;
+};
+
+pages.releases=function(){
+  var all=mySongs.map(function(s){
+    return '<tr><td><strong>'+esc(s.title)+'</strong></td><td>'+esc(s.album||"Single")+'</td><td>'+esc(s.genre)+'</td><td>'+statusBadge(s.status)+'</td><td>'+esc(s.date)+'</td><td>'+fmt(s.streams)+'</td><td><div class="action-btns">'+(s.status==="pending_review"?'<span class="badge badge-yellow">Awaiting Review</span>':s.status==="draft"?'<button class="btn btn-ghost btn-sm">Submit</button>':'<span class="badge badge-green">Live</span>')+'</div></td></tr>';
+  }).join("");
+  return '<div class="table-wrap"><div class="table-head"><h3>Release Manager</h3></div><div class="table-scroll"><table><thead><tr><th>Title</th><th>Album</th><th>Genre</th><th>Status</th><th>Date</th><th>Streams</th><th>Actions</th></tr></thead><tbody>'+all+'</tbody></table></div></div>';
+};
+
+pages.analytics=function(){
+  var published=mySongs.filter(function(s){return s.status==="published"});
+  var totalStreams=published.reduce(function(a,s){return a+s.streams},0);
+  var totalLikes=published.reduce(function(a,s){return a+s.likes},0);
+  var dailyStreams=[1.2,1.3,1.1,1.4,1.5,1.4,1.6,1.7,1.6,1.8,1.7,1.9,2.0,1.9,2.1,2.0,2.2,2.1,2.3,2.2,2.4,2.3,2.5,2.4,2.5,2.6,2.5,2.7,2.6,2.8];
+  var maxD=Math.max.apply(null,dailyStreams);
+  var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var listenerGrowth=[12.4,14.2,16.1,18.4,20.8,22.6,25.1,27.8,30.2,32.1,33.6,34.8];
+  var maxL=Math.max.apply(null,listenerGrowth);
+
+  return '<div class="chart-grid">'+
+    '<div class="chart-card full"><div class="chart-head"><h3>Daily Streams (Millions)</h3></div><div class="chart-area"><div class="chart-bars">'+dailyStreams.map(function(v,i){return '<div class="chart-bar" style="height:'+(v/maxD*100)+'%;opacity:'+(0.5+i/dailyStreams.length*0.5)+'" data-val="'+v+'M"></div>'}).join("")+'</div><div class="chart-labels"><span>1</span><span>7</span><span>14</span><span>21</span><span>30</span></div></div></div>'+
+    '<div class="chart-card"><div class="chart-head"><h3>Monthly Listeners Growth</h3></div><div class="chart-area"><div class="chart-bars">'+listenerGrowth.map(function(v,i){return '<div class="chart-bar" style="height:'+(v/maxL*100)+'%;background:linear-gradient(180deg,#ec4899,#a855f7)" data-val="'+v+'M"></div>'}).join("")+'</div><div class="chart-labels">'+months.map(function(m){return '<span>'+m+'</span>'}).join("")+'</div></div></div>'+
+    '<div class="chart-card"><div class="chart-head"><h3>Top Songs</h3></div><div style="display:grid;gap:8px">'+published.sort(function(a,b){return b.streams-a.streams}).slice(0,5).map(function(s,i){
+      var pct=Math.round((s.streams/published[0].streams)*100);
+      return '<div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12.5px;font-weight:600">'+(i+1)+'. '+esc(s.title)+'</span><span style="font-size:11px;color:var(--muted)">'+fmt(s.streams)+'</span></div><div style="height:4px;border-radius:4px;background:var(--surface-strong);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--grad);border-radius:4px"></div></div></div>';
+    }).join("")+'</div></div>'+
+    '<div class="chart-card full"><div class="chart-head"><h3>Key Metrics</h3></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px">'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">'+fmt(totalStreams)+'</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Total Streams</div></div>'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">'+fmt(totalLikes)+'</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Total Likes</div></div>'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">'+fmt(artistProfile.followers)+'</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Followers</div></div>'+
+      '<div style="text-align:center;padding:16px"><div style="font-size:28px;font-weight:700;font-family:var(--font-display)">3.8min</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Avg Listen Time</div></div>'+
+    '</div></div></div>';
+};
+
+pages.audience=function(){
+  var countries=[{name:"United States",pct:32},{name:"Nigeria",pct:18},{name:"United Kingdom",pct:12},{name:"South Africa",pct:8},{name:"Canada",pct:7},{name:"Germany",pct:5},{name:"Brazil",pct:4},{name:"Other",pct:14}];
+  var ageGroups=[{range:"13-17",pct:8},{range:"18-24",pct:35},{range:"25-34",pct:32},{range:"35-44",pct:15},{range:"45+",pct:10}];
+  return '<div class="chart-grid">'+
+    '<div class="chart-card"><div class="chart-head"><h3>Top Countries</h3></div><div style="display:grid;gap:10px">'+countries.map(function(c){
+      return '<div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12.5px;font-weight:600">'+esc(c.name)+'</span><span style="font-size:11px;color:var(--muted)">'+c.pct+'%</span></div><div style="height:6px;border-radius:3px;background:var(--surface-strong);overflow:hidden"><div style="height:100%;width:'+c.pct+'%;background:var(--grad);border-radius:3px"></div></div></div>';
+    }).join("")+'</div></div>'+
+    '<div class="chart-card"><div class="chart-head"><h3>Age Distribution</h3></div><div style="display:grid;gap:10px">'+ageGroups.map(function(a){
+      return '<div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12.5px;font-weight:600">'+esc(a.range)+'</span><span style="font-size:11px;color:var(--muted)">'+a.pct+'%</span></div><div style="height:6px;border-radius:3px;background:var(--surface-strong);overflow:hidden"><div style="height:100%;width:'+a.pct+'%;background:linear-gradient(120deg,#ec4899,#f97316);border-radius:3px"></div></div></div>';
+    }).join("")+'</div></div>'+
+    '<div class="chart-card full"><div class="chart-head"><h3>Audience Insights</h3></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px">'+
+      '<div style="padding:16px;background:var(--surface);border-radius:12px;text-align:center"><div style="font-size:24px;font-weight:700">8.2M</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Monthly Listeners</div></div>'+
+      '<div style="padding:16px;background:var(--surface);border-radius:12px;text-align:center"><div style="font-size:24px;font-weight:700">62%</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Male Audience</div></div>'+
+      '<div style="padding:16px;background:var(--surface);border-radius:12px;text-align:center"><div style="font-size:24px;font-weight:700">38%</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Female Audience</div></div>'+
+      '<div style="padding:16px;background:var(--surface);border-radius:12px;text-align:center"><div style="font-size:24px;font-weight:700">8pm-11pm</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Peak Listening Time</div></div>'+
+    '</div></div></div>';
+};
+
+pages.comments=function(){
+  return '<div style="display:grid;gap:8px">'+myComments.map(function(c){
+    return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:32px;height:32px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-size:11px;font-weight:700">'+esc(initials(c.user))+'</div><div><strong style="font-size:13px">'+esc(c.user)+'</strong><span style="color:var(--muted);font-size:12px;margin-left:8px">on '+esc(c.song)+'</span></div><span style="margin-left:auto;color:var(--muted);font-size:11px">'+esc(c.time)+'</span></div><p style="font-size:13.5px;color:var(--muted);line-height:1.5">'+esc(c.text)+'</p><div style="margin-top:8px;display:flex;gap:12px"><span style="font-size:12px;color:var(--brand)">❤ '+c.likes+'</span><button style="background:none;border:0;color:var(--muted);font-size:12px;cursor:pointer">Reply</button><button style="background:none;border:0;color:var(--red);font-size:12px;cursor:pointer">Report</button></div></div>';
+  }).join("")+'</div>';
+};
+
+pages.notifications=function(){
+  return '<div style="display:grid;gap:8px">'+myNotifications.map(function(n){
+    var colors={info:"var(--blue)",warning:"var(--yellow)",success:"var(--green)"};
+    return '<div style="padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:'+(n.read?"var(--surface)":"rgba(168,85,247,.06)")+'"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><div style="width:8px;height:8px;border-radius:50%;background:'+(colors[n.type]||"var(--muted)")+'"></div><strong style="font-size:13px">'+esc(n.title)+'</strong><span style="margin-left:auto;font-size:11px;color:var(--muted)">'+esc(n.time)+'</span></div><p style="font-size:12.5px;color:var(--muted);line-height:1.5">'+esc(n.message)+'</p></div>';
+  }).join("")+'</div>';
+};
+
+pages.earnings=function(){
+  var published=mySongs.filter(function(s){return s.status==="published"});
+  var totalEarnings=published.reduce(function(a,s){return a+Math.round(s.streams*0.004)},0);
+  var earningsBySong=published.map(function(s){return{title:s.title,streams:s.streams,earnings:Math.round(s.streams*0.004)}}).sort(function(a,b){return b.earnings-a.earnings});
+
+  return '<div class="stat-grid"><div class="stat-card"><h3>$'+(totalEarnings/100).toFixed(0)+'</h3><p>Total Estimated Earnings</p></div><div class="stat-card"><h3>$'+((totalEarnings*0.15)/100).toFixed(0)+'</h3><p>Pending Payout</p></div><div class="stat-card"><h3>$'+((totalEarnings*0.85)/100).toFixed(0)+'</h3><p>Paid Out</p></div></div>'+
+  '<div class="table-wrap"><div class="table-head"><h3>Earnings by Song</h3><span class="badge badge-gray">Payments on hold</span></div><div class="table-scroll"><table><thead><tr><th>Song</th><th>Streams</th><th>Est. Earnings</th></tr></thead><tbody>'+earningsBySong.map(function(e){return '<tr><td><strong>'+esc(e.title)+'</strong></td><td>'+fmt(e.streams)+'</td><td><strong>$'+fmt(e.earnings)+'</strong></td></tr>'}).join("")+'</tbody></table></div></div>';
+};
+
+pages.settings=function(){
+  return '<div class="settings-section"><h3>Account Settings</h3>'+
+    '<div class="setting-row"><div><div class="setting-label">Email Notifications</div><div class="setting-desc">Receive email updates about your music</div></div><label class="toggle on"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Push Notifications</div><div class="setting-desc">Get notified about new followers and milestones</div></div><label class="toggle on"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Show Earnings</div><div class="setting-desc">Display earnings in your dashboard</div></div><label class="toggle on"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Public Profile</div><div class="setting-desc">Make your profile visible on the platform</div></div><label class="toggle on"></label></div>'+
+  '</div>'+
+  '<div class="settings-section"><h3>Privacy</h3>'+
+    '<div class="setting-row"><div><div class="setting-label">Show Listener Count</div></div><label class="toggle on"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Show Download Count</div></div><label class="toggle"></label></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Allow Comments</div></div><label class="toggle on"></label></div>'+
+  '</div>'+
+  '<div class="settings-section"><h3>Connected Accounts</h3>'+
+    '<div class="setting-row"><div><div class="setting-label">Spotify</div><div class="setting-desc">Connected as Kira Solace</div></div><span class="badge badge-green">Connected</span></div>'+
+    '<div class="setting-row"><div><div class="setting-label">Instagram</div><div class="setting-desc">@kirasolace</div></div><span class="badge badge-green">Connected</span></div>'+
+    '<div class="setting-row"><div><div class="setting-label">YouTube</div><div class="setting-desc">Not connected</div></div><button class="btn btn-ghost btn-sm">Connect</button></div>'+
+  '</div>';
+};
+
+function saveUploadInputs(){
+  var fields=[
+    ["upTitle","title"],["upFeatured","featured"],["upAlbum","album"],
+    ["upCopyright","copyright"],["upComposer","composer"],["upProducer","producer"],
+    ["upDesc","description"]
+  ];
+  fields.forEach(function(pair){
+    var el=$("#"+pair[0]);
+    if(el)uploadState[pair[1]]=el.value;
+  });
+  var genreEl=$("#upGenre");if(genreEl)uploadState.genre=genreEl.value;
+  var langEl=$("#upLang");if(langEl)uploadState.language=langEl.value;
+  var dateEl=$("#upDate");if(dateEl)uploadState.releaseDate=dateEl.value;
+}
+
+/* ===== EVENT BINDING ===== */
+function bindEvents(){
+  $$("[data-nav]").forEach(function(b){b.addEventListener("click",function(){setPage(b.dataset.nav)})});
+  var editBtn=$("#editProfileBtn");
+  if(editBtn)editBtn.addEventListener("click",function(){showToast("Profile edit mode — save your changes")});
+
+  // Upload steps
+  var upNext=$("#uploadNext");
+  var upPrev=$("#uploadPrev");
+  if(upNext)upNext.addEventListener("click",function(){
+    saveUploadInputs();
+    if(uploadState.step<5){uploadState.step++;renderPage();window.scrollTo(0,0)}
+  });
+  if(upPrev)upPrev.addEventListener("click",function(){
+    saveUploadInputs();
+    if(uploadState.step>1){uploadState.step--;renderPage();window.scrollTo(0,0)}
+  });
+
+  var submitBtn=$("#submitRelease");
+  if(submitBtn)submitBtn.addEventListener("click",function(){
+    saveUploadInputs();
+    mySongs.push({id:"s_"+Date.now(),title:uploadState.title||"Untitled",album:uploadState.album||"",genre:uploadState.genre,duration:200,status:"pending_review",streams:0,likes:0,downloads:0,date:new Date().toISOString().slice(0,10),featured:uploadState.featured||""});
+    uploadState={step:1,fileName:"",fileSize:"",title:"",featured:"",album:"",genre:"Pop",language:"English",releaseDate:"",copyright:"",composer:"",producer:"",description:"",artworkName:""};
+    showToast("Release submitted for review!");
+    setPage("releases");
+  });
+
+  var dropZone=$("#audioDropZone");
+  if(dropZone)dropZone.addEventListener("click",function(){
+    uploadState.fileName="neon_dreams_v2.mp3";
+    uploadState.fileSize="4.2 MB";
+    dropZone.classList.add("has-file");
+  });
+  var artDrop=$("#artDropZone");
+  if(artDrop)artDrop.addEventListener("click",function(){
+    uploadState.artworkName="electric_sky_cover.jpg";
+    artDrop.classList.add("has-file");
+  });
+
+  // Toggles
+  $$(".toggle").forEach(function(t){t.addEventListener("click",function(){t.classList.toggle("on")})});
+}
+
+/* ===== SIDEBAR ===== */
+$$(".nav-item").forEach(function(btn){btn.addEventListener("click",function(){setPage(btn.dataset.page)})});
+$("#hamburger").addEventListener("click",function(){$("#sidebar").classList.toggle("open");$("#scrim").classList.toggle("show")});
+$("#scrim").addEventListener("click",function(){$("#sidebar").classList.remove("open");$("#scrim").classList.remove("show")});
+function closeSidebar(){$("#sidebar").classList.remove("open");$("#scrim").classList.remove("show")}
+
+/* ===== BOOT ===== */
+renderPage();
+})();
+</script>
+</body>
+</html>

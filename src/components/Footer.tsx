@@ -86,7 +86,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border pt-[26px] flex justify-between flex-wrap gap-3 items-center">
-          <p className="text-muted text-[13px]">© 2025 OneBEAT Music. All rights reserved.</p>
+          <p className="text-muted text-[13px]">© 2026 OneBEAT Music. All rights reserved.</p>
           <p className="creators text-[13px] text-muted">
             Created by <strong className="text-text font-semibold">AirSPACEX</strong> × <strong className="text-text font-semibold">Rych BioTech</strong>
           </p>

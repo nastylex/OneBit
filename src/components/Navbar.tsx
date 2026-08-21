@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-all duration-300">
+      <header className="fixed inset-x-0 top-0 z-50 bg-[rgba(7,7,11,.85)] backdrop-blur-xl border-b border-border transition-all duration-300">
         <div className="mx-auto flex max-w-[1180px] items-center justify-between px-[4%] h-[72px]">
           <Link href="/" className="flex items-center gap-[11px] font-display font-bold text-[21px] tracking-tight">
             <span className="grid h-[36px] w-[36px] place-items-center rounded-[11px] gradient-bg shadow-[0_6px_20px_-6px_rgba(236,72,153,.6)]">

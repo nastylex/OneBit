@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BrandMark, CheckCircleIcon } from "@/components/Icons";
+import Navbar from "@/components/Navbar";
+import { CheckCircleIcon } from "@/components/Icons";
 
 const GENRES = ["Pop", "R&B", "Hip Hop", "Afrobeat", "Electronic", "Rock", "Indie", "Jazz", "Soul", "Latin", "Country", "Classical", "Reggae", "Metal", "Folk", "Blues"];
 const COUNTRIES = ["Afghanistan", "Albania", "Algeria", "Argentina", "Australia", "Austria", "Bangladesh", "Belgium", "Brazil", "Canada", "Chile", "China", "Colombia", "Czech Republic", "Denmark", "Egypt", "Ethiopia", "Finland", "France", "Germany", "Ghana", "Greece", "Hungary", "India", "Indonesia", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Kenya", "Malaysia", "Mexico", "Morocco", "Netherlands", "New Zealand", "Nigeria", "Norway", "Pakistan", "Peru", "Philippines", "Poland", "Portugal", "Romania", "Russia", "Saudi Arabia", "South Africa", "South Korea", "Spain", "Sweden", "Switzerland", "Tanzania", "Thailand", "Turkey", "UAE", "Uganda", "Ukraine", "United Kingdom", "United States", "Vietnam", "Zimbabwe"];
@@ -39,17 +40,7 @@ export default function RegisterPage() {
     return (
       <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] flex flex-col">
         <div className="fixed inset-0 -z-10 pointer-events-none bg-[radial-gradient(50%_40%_at_50%_0%,rgba(168,85,247,.1),transparent_60%),var(--color-bg)]" />
-        <header className="flex items-center justify-between px-[5%] py-4 border-b border-[rgba(255,255,255,.09)]">
-          <Link href="/" className="flex items-center gap-2.5 font-display font-bold text-lg">
-            <span className="grid h-8 w-8 place-items-center rounded-[9px] gradient-bg"><BrandMark className="w-4 h-4 text-white" /></span>
-            <span>OneBEAT<small className="block text-[8px] font-body font-semibold tracking-[.3em] text-[#9d9dab] -mt-0.5">MUSIC</small></span>
-          </Link>
-          <div className="flex items-center gap-3.5">
-            <Link href="/player" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors">Public Platform</Link>
-            <Link href="/admin" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors" style={{ color: "var(--color-brand)" }}>Admin</Link>
-            <Link href="/artist" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors" style={{ color: "var(--color-green)" }}>Artist Portal</Link>
-          </div>
-        </header>
+        <Navbar />
         <div className="flex-1 flex justify-center px-[5%] py-[clamp(24px,5vw,60px)]">
           <div className="w-[min(520px,100%)] text-center">
             <div className="w-20 h-20 rounded-full bg-[rgba(52,211,153,.12)] border-2 border-[rgba(52,211,153,.3)] grid place-items-center mx-auto mb-6">
@@ -85,17 +76,7 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] flex flex-col">
       <div className="fixed inset-0 -z-10 pointer-events-none bg-[radial-gradient(50%_40%_at_50%_0%,rgba(168,85,247,.1),transparent_60%),var(--color-bg)]" />
 
-      <header className="flex items-center justify-between px-[5%] py-4 border-b border-[rgba(255,255,255,.09)]">
-        <Link href="/" className="flex items-center gap-2.5 font-display font-bold text-lg">
-          <span className="grid h-8 w-8 place-items-center rounded-[9px] gradient-bg"><BrandMark className="w-4 h-4 text-white" /></span>
-          <span>OneBEAT<small className="block text-[8px] font-body font-semibold tracking-[.3em] text-[#9d9dab] -mt-0.5">MUSIC</small></span>
-        </Link>
-        <div className="flex items-center gap-3.5">
-          <Link href="/player" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors">Public Platform</Link>
-          <Link href="/admin" className="text-[13.5px] font-medium hover:text-[var(--color-text)] transition-colors" style={{ color: "var(--color-brand)" }}>Admin</Link>
-          <Link href="/artist" className="text-[13.5px] font-medium hover:text-[var(--color-text)] transition-colors" style={{ color: "var(--color-green)" }}>Artist Portal</Link>
-        </div>
-      </header>
+      <Navbar />
 
       <div className="flex-1 flex justify-center px-[5%] py-[clamp(24px,5vw,60px)] max-sm:px-[4%]">
         <div className="w-[min(720px,100%)]">
@@ -242,7 +223,7 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      <div className="text-center py-5 text-xs text-white/30 border-t border-[rgba(255,255,255,.09)] mt-auto">© 2025 OneBEAT Music · Artist Registration</div>
+      <div className="text-center py-5 text-xs text-white/30 border-t border-[rgba(255,255,255,.09)] mt-auto">© 2026 OneBEAT Music · Artist Registration</div>
     </div>
   );
 }

@@ -52,6 +52,17 @@ button { font-family: inherit; cursor: pointer; }
 ::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.28); }
 ::-webkit-scrollbar-track { background: transparent; }
 
+/* ============ FORM FIXES ============ */
+select option {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-muted);
+}
+
 /* ============ UTILITY CLASSES ============ */
 .gradient-text {
   background: var(--grad);

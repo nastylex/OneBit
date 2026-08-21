@@ -5,14 +5,11 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import {
-  BrandMark,
   NoteIcon,
   HeartIcon,
   PlayIcon,
   PauseIcon,
   CheckIcon,
-  ChevronRightIcon,
-  StarIcon,
 } from "@/components/Icons";
 
 /* ============ DATA ============ */
@@ -151,7 +148,7 @@ const PRICING = [
 export default function LandingPage() {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [currentTrack, setCurrentTrack] = useState(0);
+  const [, setCurrentTrack] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const [liked, setLiked] = useState<Set<number>>(new Set([0, 5]));
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);

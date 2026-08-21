@@ -8,11 +8,8 @@ import {
   UsersIcon,
   FileIcon,
   MusicIcon,
-  UploadIcon,
-  StarFilledIcon,
   FlagIcon,
   ActivityIcon,
-  BarChartIcon,
   DollarIcon,
   SettingsIcon,
   BellIcon,
@@ -53,12 +50,6 @@ const ACTIVITY = [
   { text: "Nova Rayne was approved as an artist", time: "2 days ago", color: "#34d399" },
   { text: "System backup completed successfully", time: "3 days ago", color: "#60a5fa" },
 ];
-
-function fmt(n: number) {
-  if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
-  return n.toString();
-}
 
 const STATUS_MAP: Record<string, string> = {
   active: "bg-[rgba(52,211,153,.12)] text-[#34d399]",

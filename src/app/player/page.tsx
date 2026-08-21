@@ -100,7 +100,6 @@ export default function AppPage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currentTrack = TRACKS[current];
-  const queue = TRACKS.map((t) => t.id);
 
   // Player progress
   useEffect(() => {

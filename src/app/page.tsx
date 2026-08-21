@@ -227,7 +227,7 @@ export default function LandingPage() {
               </p>
 
               <div className="flex flex-wrap gap-3.5 mb-10 max-[1024px]:justify-center">
-                <Link href="/app" className="inline-flex items-center justify-center gap-2 px-[26px] py-[13px] text-[15px] font-semibold rounded-full gradient-bg text-white shadow-[0_8px_30px_-8px_rgba(236,72,153,.55)] hover:-translate-y-0.5 transition-all">
+                <Link href="/player" className="inline-flex items-center justify-center gap-2 px-[26px] py-[13px] text-[15px] font-semibold rounded-full gradient-bg text-white shadow-[0_8px_30px_-8px_rgba(236,72,153,.55)] hover:-translate-y-0.5 transition-all">
                   <PlayIcon className="w-[17px] h-[17px]" />
                   Start listening — it&apos;s free
                 </Link>

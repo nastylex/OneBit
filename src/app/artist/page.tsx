@@ -140,7 +140,7 @@ export default function ArtistPage() {
           </button>
           <h1 className="font-display text-[22px] font-bold tracking-tight capitalize">{PAGES.find((p) => p.id === page)?.label || page}</h1>
           <div className="ml-auto flex items-center gap-3">
-            <Link href="/app" className="text-xs font-semibold px-3.5 py-2 rounded-[10px] bg-[rgba(255,255,255,.04)] border border-[rgba(255,255,255,.09)] text-[#9d9dab] hover:text-text transition-all">Public Platform</Link>
+            <Link href="/player" className="text-xs font-semibold px-3.5 py-2 rounded-[10px] bg-[rgba(255,255,255,.04)] border border-[rgba(255,255,255,.09)] text-[#9d9dab] hover:text-text transition-all">Public Platform</Link>
           </div>
         </div>
 

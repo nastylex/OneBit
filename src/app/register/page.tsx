@@ -45,7 +45,7 @@ export default function RegisterPage() {
             <span>OneBEAT<small className="block text-[8px] font-body font-semibold tracking-[.3em] text-[#9d9dab] -mt-0.5">MUSIC</small></span>
           </Link>
           <div className="flex items-center gap-3.5">
-            <Link href="/app" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors">Public Platform</Link>
+            <Link href="/player" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors">Public Platform</Link>
             <Link href="/admin" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors" style={{ color: "var(--color-brand)" }}>Admin</Link>
             <Link href="/artist" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors" style={{ color: "var(--color-green)" }}>Artist Portal</Link>
           </div>
@@ -73,7 +73,7 @@ export default function RegisterPage() {
             </div>
             <div className="flex gap-3 justify-center">
               <Link href="/" className="inline-flex items-center gap-2 font-semibold text-sm px-6 py-3 rounded-[10px] bg-[rgba(255,255,255,.04)] border border-[rgba(255,255,255,.09)] text-[var(--color-text)] transition-all hover:bg-[rgba(255,255,255,.07)]">Back to Home</Link>
-              <Link href="/app" className="inline-flex items-center gap-2 font-semibold text-sm px-6 py-3 rounded-[10px] gradient-bg text-white shadow-[0_8px_28px_-8px_rgba(236,72,153,.5)] hover:-translate-y-0.5 transition-all">Explore Music</Link>
+              <Link href="/player" className="inline-flex items-center gap-2 font-semibold text-sm px-6 py-3 rounded-[10px] gradient-bg text-white shadow-[0_8px_28px_-8px_rgba(236,72,153,.5)] hover:-translate-y-0.5 transition-all">Explore Music</Link>
             </div>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function RegisterPage() {
           <span>OneBEAT<small className="block text-[8px] font-body font-semibold tracking-[.3em] text-[#9d9dab] -mt-0.5">MUSIC</small></span>
         </Link>
         <div className="flex items-center gap-3.5">
-          <Link href="/app" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors">Public Platform</Link>
+          <Link href="/player" className="text-[13.5px] font-medium text-[#9d9dab] hover:text-[var(--color-text)] transition-colors">Public Platform</Link>
           <Link href="/admin" className="text-[13.5px] font-medium hover:text-[var(--color-text)] transition-colors" style={{ color: "var(--color-brand)" }}>Admin</Link>
           <Link href="/artist" className="text-[13.5px] font-medium hover:text-[var(--color-text)] transition-colors" style={{ color: "var(--color-green)" }}>Artist Portal</Link>
         </div>

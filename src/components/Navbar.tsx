@@ -45,7 +45,7 @@ export default function Navbar() {
             <Link href="/register" className="hidden md:inline-block text-[14.5px] font-medium text-brand hover:text-text transition-colors">
               Register as Artist
             </Link>
-            <Link href="/app" className="hidden md:inline-block text-[14.5px] font-medium text-muted hover:text-text transition-colors">
+            <Link href="/player" className="hidden md:inline-block text-[14.5px] font-medium text-muted hover:text-text transition-colors">
               Listen
             </Link>
             <Link href="/#cta" className="hidden md:inline-flex items-center justify-center gap-2 px-[26px] py-[13px] text-[15px] font-semibold rounded-full gradient-bg text-white shadow-[0_8px_30px_-8px_rgba(236,72,153,.55)] hover:-translate-y-0.5 transition-all">
@@ -70,7 +70,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link href="/app" className="py-3 px-1.5 font-semibold text-[16px] text-muted hover:text-text border-b border-white/5" onClick={() => setOpen(false)}>
+          <Link href="/player" className="py-3 px-1.5 font-semibold text-[16px] text-muted hover:text-text border-b border-white/5" onClick={() => setOpen(false)}>
             Listen Now
           </Link>
           <Link href="/register" className="py-3 px-1.5 font-semibold text-[16px] text-brand border-b border-white/5" onClick={() => setOpen(false)}>

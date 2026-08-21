@@ -116,15 +116,15 @@ export default function RegisterPage() {
                 <div className="grid grid-cols-3 gap-4 max-[640px]:grid-cols-1 mb-4">
                   <div>
                     <label className="block text-xs font-semibold text-[#9d9dab] mb-1.5">Artist Type <span className="text-[#f87171]">*</span></label>
-                    <select value={form.type} onChange={(e) => update("type", e.target.value)} className="w-full bg-[rgba(255,255,255,.07)] border border-[rgba(255,255,255,.09)] rounded-[10px] px-3.5 py-[11px] text-[var(--color-text)] text-[13.5px] outline-none"><option>Solo</option><option>Group</option><option>Band</option></select>
+                    <select value={form.type} onChange={(e) => update("type", e.target.value)} className="w-full bg-[rgba(255,255,255,.07)] border border-[rgba(255,255,255,.09)] rounded-[10px] px-3.5 py-[11px] text-[var(--color-text)] text-[13.5px] outline-none focus:border-[rgba(168,85,247,.5)] focus:shadow-[0_0_0_3px_rgba(168,85,247,.1)] transition-all"><option>Solo</option><option>Group</option><option>Band</option></select>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-[#9d9dab] mb-1.5">Primary Genre <span className="text-[#f87171]">*</span></label>
-                    <select value={form.genre} onChange={(e) => update("genre", e.target.value)} className="w-full bg-[rgba(255,255,255,.07)] border border-[rgba(255,255,255,.09)] rounded-[10px] px-3.5 py-[11px] text-[var(--color-text)] text-[13.5px] outline-none">{GENRES.map((g) => <option key={g}>{g}</option>)}</select>
+                    <select value={form.genre} onChange={(e) => update("genre", e.target.value)} className="w-full bg-[rgba(255,255,255,.07)] border border-[rgba(255,255,255,.09)] rounded-[10px] px-3.5 py-[11px] text-[var(--color-text)] text-[13.5px] outline-none focus:border-[rgba(168,85,247,.5)] focus:shadow-[0_0_0_3px_rgba(168,85,247,.1)] transition-all">{GENRES.map((g) => <option key={g}>{g}</option>)}</select>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-[#9d9dab] mb-1.5">Country <span className="text-[#f87171]">*</span></label>
-                    <select value={form.country} onChange={(e) => update("country", e.target.value)} className="w-full bg-[rgba(255,255,255,.07)] border border-[rgba(255,255,255,.09)] rounded-[10px] px-3.5 py-[11px] text-[var(--color-text)] text-[13.5px] outline-none"><option value="">Select...</option>{COUNTRIES.map((c) => <option key={c}>{c}</option>)}</select>
+                    <select value={form.country} onChange={(e) => update("country", e.target.value)} className="w-full bg-[rgba(255,255,255,.07)] border border-[rgba(255,255,255,.09)] rounded-[10px] px-3.5 py-[11px] text-[var(--color-text)] text-[13.5px] outline-none focus:border-[rgba(168,85,247,.5)] focus:shadow-[0_0_0_3px_rgba(168,85,247,.1)] transition-all"><option value="">Select...</option>{COUNTRIES.map((c) => <option key={c}>{c}</option>)}</select>
                   </div>
                 </div>
                 <label className="block text-xs font-semibold text-[#9d9dab] mb-1.5">Location / City</label>

@@ -406,7 +406,7 @@ export default function LandingPage() {
                       <PlayIcon className="w-5 h-5" />
                     </button>
                   </div>
-                  <div className="track-info">
+                  <div>
                     <h4 className="text-[15px] font-semibold truncate">{t.title}</h4>
                     <p className="text-[13px] text-muted truncate">{t.artist}</p>
                     <div className="flex items-center justify-between mt-2">

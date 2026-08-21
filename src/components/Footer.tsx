@@ -61,7 +61,7 @@ export default function Footer() {
                   aria-label={s.label}
                   className="grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-surface border border-border text-muted hover:text-white hover:border-brand/50 hover:bg-brand/10 hover:-translate-y-0.75 transition-all"
                 >
-                  <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="currentColor">
                     <path d={s.path} />
                   </svg>
                 </a>

@@ -570,7 +570,7 @@ export default function AppPage() {
         </div>
 
         {/* Right */}
-        <div className="hidden max-[1024px]:hidden max-[1024px]:!hidden flex items-center gap-2.5 justify-self-end max-[1024px]:!hidden max-[768px]:!hidden" style={{ display: undefined }}>
+        <div className="hidden md:flex items-center gap-2.5 justify-self-end">
           <div className="flex items-center gap-2">
             <VolumeIcon className="w-[17px] h-[17px] text-muted" />
             <input
